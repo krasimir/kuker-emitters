@@ -19,9 +19,28 @@ Machine.addMiddleware(StentEmitter);
 
 ```js
 import { createStore, applyMiddleware } from 'redux';
-import StentEmitter from 'stent-dev-tools-emitters/lib/ReduxEmitter';
+import ReduxEmitter from 'stent-dev-tools-emitters/lib/ReduxEmitter';
 
 const middleware = ReduxEmitter();
 
 const store = createStore(<reducer>, applyMiddleware(middleware));
+```
+
+## Redux-saga integration
+
+```js
+import { createStore, applyMiddleware } from 'redux';
+import ReduxSagaEmitter from 'stent-dev-tools-emitters/lib/ReduxSagaEmitter';
+import createSagaMiddleware from 'redux-saga';
+
+const emitter = ReduxSagaEmitter();
+const sagaMiddleware = createSagaMiddleware({ sagaMonitor: emitter.sagaMonitor });
+
+const store = createStore(<reducer>, applyMiddleware(sagaMiddleware));
+
+// This bit is really important.
+// Without it you won't get the current state of the app with every event.
+emitter.setStore(store);
+
+sagaMiddleware.run(rootSaga)
 ```

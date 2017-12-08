@@ -1,8 +1,12 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.ReduxEmitter = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.ReduxSagaEmitter = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
-exports.default = ReduxEmitter;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /* eslint-disable max-len */
+
 
 var _sanitize = require('./helpers/sanitize');
 
@@ -14,33 +18,99 @@ var _message2 = _interopRequireDefault(_message);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var icon = 'fa-gear';
-var color = '#e7f7e3';
+var icon = 'fa-caret-right';
+var color = '#f7f5e3';
 var uid = 'redux';
 
-function ReduxEmitter() {
-  return function middleware(_ref) {
-    var getState = _ref.getState,
-        dispatch = _ref.dispatch;
+var store = null;
 
-    (0, _message2.default)({ pageRefresh: true, icon: icon, color: color }, uid);
+var getState = function getState() {
+  if (store) return store.getState();
+  return { '<unknown>': 'Please check https://github.com/krasimir/stent-dev-tools-emitters to learn how to get the state in here.' };
+};
 
-    return function (next) {
-      return function (action) {
-        var result = next(action);
+var sendMessage = function sendMessage(data) {
+  (0, _message2.default)(_extends({
+    state: (0, _sanitize2.default)(getState()),
+    icon: icon,
+    color: color
+  }, data), uid);
+};
 
-        (0, _message2.default)({
-          state: (0, _sanitize2.default)(getState()),
-          label: action.type,
-          action: (0, _sanitize2.default)(action),
-          icon: icon,
-          color: color
-        }, uid);
-        return result;
-      };
-    };
+var getEffectName = function getEffectName(effect) {
+  if (effect && (typeof effect === 'undefined' ? 'undefined' : _typeof(effect)) === 'object') {
+    if (effect.root === true) {
+      return 'root';
+    }
+    var keys = Object.keys(effect).filter(function (key) {
+      return key.indexOf('@@') < 0;
+    });
+
+    if (keys.length > 0) return keys[0];
+  }
+  return null;
+};
+
+var Emitter = function Emitter() {
+  (0, _message2.default)({ pageRefresh: true, icon: icon, color: color }, uid);
+
+  return {
+    sagaMonitor: {
+      effectTriggered: function effectTriggered(_ref) {
+        var effectId = _ref.effectId,
+            parentEffectId = _ref.parentEffectId,
+            label = _ref.label,
+            effect = _ref.effect;
+
+        sendMessage({
+          label: 'effectTriggered',
+          effectName: getEffectName(effect),
+          action: (0, _sanitize2.default)({
+            effectId: effectId, parentEffectId: parentEffectId, label: label, effect: effect
+          })
+        });
+      },
+      effectResolved: function effectResolved(effectId, result) {
+        sendMessage({
+          label: 'effectResolved',
+          effect: result && result.name,
+          action: (0, _sanitize2.default)({
+            effectId: effectId, result: result
+          })
+        });
+      },
+      effectRejected: function effectRejected(effectId, error) {
+        sendMessage({
+          label: 'effectRejected',
+          action: (0, _sanitize2.default)({
+            effectId: effectId, error: error
+          })
+        });
+      },
+      effectCancelled: function effectCancelled(effectId) {
+        sendMessage({
+          label: 'effectCancelled',
+          action: (0, _sanitize2.default)({
+            effectId: effectId
+          })
+        });
+      },
+      actionDispatched: function actionDispatched(action) {
+        sendMessage({
+          label: 'actionDispatched',
+          action: (0, _sanitize2.default)({
+            action: action
+          })
+        });
+      }
+    },
+    setStore: function setStore(s) {
+      return store = s;
+    }
   };
 };
+
+exports.default = Emitter;
 module.exports = exports['default'];
 },{"./helpers/message":2,"./helpers/sanitize":3}],2:[function(require,module,exports){
 'use strict';
