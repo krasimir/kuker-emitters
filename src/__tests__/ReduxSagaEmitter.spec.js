@@ -78,7 +78,7 @@ describe('Given the ReduxSagaEmitter', function () {
               parentEffectId: sinon.match.number
             },
             effectName: 'root',
-            label: 'effectTriggered',
+            label: 'effectTriggered(root)',
             state: { a: { value: 0 }, b: [1, 2, 3, 4], c: { __func: 'c' }, d: { __func: 'd' } }
           }));
 
@@ -90,7 +90,7 @@ describe('Given the ReduxSagaEmitter', function () {
               parentEffectId: sinon.match.number
             },
             effectName: 'TAKE',
-            label: 'effectTriggered',
+            label: 'effectTriggered(TAKE)',
             state: { a: { value: 0 }, b: [1, 2, 3, 4], c: { __func: 'c' }, d: { __func: 'd' } }
           }));
 
@@ -112,8 +112,8 @@ describe('Given the ReduxSagaEmitter', function () {
                 setContext: { __func: 'setContext' }
               }
             },
-            effect: 'rootSaga',
-            label: 'effectResolved',
+            effectName: 'rootSaga',
+            label: 'effectResolved(rootSaga)',
             state: { a: { value: 0 }, b: [1, 2, 3, 4], c: { __func: 'c' }, d: { __func: 'd' } }
           }));
 

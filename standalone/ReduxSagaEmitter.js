@@ -18,7 +18,7 @@ var _message2 = _interopRequireDefault(_message);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var icon = 'fa-caret-right';
+var icon = 'fa-circle-o';
 var color = '#f7f5e3';
 var uid = 'redux';
 
@@ -62,18 +62,22 @@ var Emitter = function Emitter() {
             label = _ref.label,
             effect = _ref.effect;
 
+        var effectName = getEffectName(effect) || '';
+
         sendMessage({
-          label: 'effectTriggered',
-          effectName: getEffectName(effect),
+          label: 'effectTriggered' + (effectName ? '(' + effectName + ')' : ''),
+          effectName: effectName,
           action: (0, _sanitize2.default)({
             effectId: effectId, parentEffectId: parentEffectId, label: label, effect: effect
           })
         });
       },
       effectResolved: function effectResolved(effectId, result) {
+        var effectName = result && result.name || '';
+
         sendMessage({
-          label: 'effectResolved',
-          effect: result && result.name,
+          label: 'effectResolved' + (effectName ? '(' + effectName + ')' : ''),
+          effectName: effectName,
           action: (0, _sanitize2.default)({
             effectId: effectId, result: result
           })

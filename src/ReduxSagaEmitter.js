@@ -2,7 +2,7 @@
 import sanitize from './helpers/sanitize';
 import message from './helpers/message';
 
-const icon = 'fa-caret-right';
+const icon = 'fa-circle-o';
 const color = '#f7f5e3';
 const uid = 'redux';
 
@@ -40,18 +40,22 @@ const Emitter = () => {
   return {
     sagaMonitor: {
       effectTriggered({ effectId, parentEffectId, label, effect }) {
+        const effectName = getEffectName(effect) || '';
+
         sendMessage({
-          label: 'effectTriggered',
-          effectName: getEffectName(effect),
+          label: 'effectTriggered' + (effectName ? `(${ effectName })` : ''),
+          effectName,
           action: sanitize({
             effectId, parentEffectId, label, effect
           })
         });
       },
       effectResolved(effectId, result) {
+        const effectName = (result && result.name) || '';
+
         sendMessage({
-          label: 'effectResolved',
-          effect: result && result.name,
+          label: 'effectResolved' + (effectName ? `(${ effectName })` : ''),
+          effectName,
           action: sanitize({
             effectId, result
           })
