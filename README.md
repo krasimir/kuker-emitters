@@ -1,6 +1,6 @@
 # Emitters for Stent's Chrome extension
 
-Small JavaScript files that emit actions to the StentDevTools Chrome Extension.
+Small JavaScript files that emit events to the StentDevTools Chrome Extension.
 
 ## Installation
 
@@ -13,4 +13,15 @@ import { Machine } from 'stent';
 import StentEmitter from 'stent-dev-tools-emitters/lib/StentEmitter';
 
 Machine.addMiddleware(StentEmitter);
+```
+
+## Redux integration
+
+```js
+import { createStore, applyMiddleware } from 'redux';
+import StentEmitter from 'stent-dev-tools-emitters/lib/ReduxEmitter';
+
+const middleware = ReduxEmitter();
+
+const store = createStore(<reducer>, applyMiddleware(middleware));
 ```
