@@ -31,6 +31,7 @@ function ReduxEmitter() {
 
         (0, _message2.default)({
           state: (0, _sanitize2.default)(getState()),
+          type: action.type,
           label: action.type,
           action: (0, _sanitize2.default)(action),
           icon: icon,
