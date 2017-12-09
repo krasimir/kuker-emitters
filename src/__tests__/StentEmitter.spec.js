@@ -35,7 +35,6 @@ describe('Given the StentEmitter', function () {
       expect(window.top.postMessage)
         .to.be.calledOnce
         .and.to.be.calledWith({
-          source: 'stent',
           time: sinon.match.number,
           uid: sinon.match.string,
           pageRefresh: true,
@@ -67,7 +66,6 @@ describe('Given the StentEmitter', function () {
         expect(window.top.postMessage).to.be.calledWith({
           uid: sinon.match.string,
           time: sinon.match.number,
-          source: 'stent',
           type: 'onMachineCreated',
           meta: { middlewares: 1 },
           state: [{ name: 'Foo', state: { name: 'idle' } }],
@@ -117,7 +115,6 @@ describe('Given the StentEmitter', function () {
         );
 
         const exp = type => sinon.match({
-          source: 'stent',
           type,
           actionName: 'run',
           args: [
@@ -139,7 +136,6 @@ describe('Given the StentEmitter', function () {
 
         machine.run();
         const exp = type => sinon.match({
-          source: 'stent',
           type,
           machine: sinon.match({
             state: { name: 'idle' }
@@ -153,7 +149,6 @@ describe('Given the StentEmitter', function () {
 
         machine.run();
         const exp = type => sinon.match({
-          source: 'stent',
           type,
           machine: sinon.match({
             state: { name: 'running' }

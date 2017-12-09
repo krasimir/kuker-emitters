@@ -3,8 +3,6 @@
 
 exports.__esModule = true;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /* eslint-disable max-len */
 
 
@@ -37,37 +35,6 @@ var sendMessage = function sendMessage(data) {
   }, data), uid);
 };
 
-var readFromPath = function readFromPath(object, path) {
-  var fallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-
-  if (!object) return fallback;
-
-  var parts = path.split('.');
-  var key = parts.shift();
-
-  if (object[key]) {
-    if (parts.length > 0) {
-      return readFromPath(object[key], parts.join('.'), fallback);
-    }
-    return object[key];
-  }
-  return fallback;
-};
-
-var getEffectName = function getEffectName(effect) {
-  if (effect && (typeof effect === 'undefined' ? 'undefined' : _typeof(effect)) === 'object') {
-    if (effect.root === true) {
-      return 'root';
-    }
-    var keys = Object.keys(effect).filter(function (key) {
-      return key.indexOf('@@') < 0;
-    });
-
-    if (keys.length > 0) return keys[0];
-  }
-  return null;
-};
-
 var Emitter = function Emitter() {
   (0, _message2.default)({ pageRefresh: true, icon: icon, color: color }, uid);
 
@@ -79,75 +46,31 @@ var Emitter = function Emitter() {
             label = _ref.label,
             effect = _ref.effect;
 
-        var action = (0, _sanitize2.default)({ effectId: effectId, parentEffectId: parentEffectId, label: label, effect: effect });
-        var effectName = getEffectName(effect) || '';
-        var saga = readFromPath(action, 'effect.saga.__func', false);
-        var fn = readFromPath(action, 'effect.' + effectName + '.fn.__func', false);
-        var selector = readFromPath(action, 'effect.' + effectName + '.selector.__func', false);
-        var args = readFromPath(action, 'effect.' + effectName + '.args', false);
-        var pattern = readFromPath(action, 'effect.' + effectName + '.pattern', false);
-
-        var eventLabel = 'effectTriggered';
-        var type = 'effectTriggered' + (effectName ? '(' + effectName + ')' : '');
-
-        if (saga) {
-          eventLabel = 'effectTriggered' + (saga ? ' (' + saga + ')' : '');
-        } else if (pattern) {
-          eventLabel = 'effectTriggered' + (pattern ? ' (' + effectName + '(' + pattern + '))' : '');
-        } else if (fn) {
-          if (args) {
-            eventLabel = 'effectTriggered' + (fn ? ' (' + fn + '(' + args + '))' : '');
-            type = 'effectTriggered(' + fn + ')';
-          } else {
-            eventLabel = 'effectTriggered' + (fn ? ' (' + effectName + '(' + fn + '))' : '');
-          }
-        } else if (selector) {
-          if (args) {
-            eventLabel = 'effectTriggered' + (selector ? ' (' + selector + '(' + args + '))' : '');
-            type = 'effectTriggered(' + selector + ')';
-          } else {
-            eventLabel = 'effectTriggered' + (selector ? ' (' + effectName + '(' + selector + '))' : '');
-          }
-        }
-
-        sendMessage({
-          type: type,
-          label: eventLabel,
-          action: action
-        });
+        sendMessage(_extends({
+          type: '@saga_effectTriggered'
+        }, (0, _sanitize2.default)({ effectId: effectId, parentEffectId: parentEffectId, label: label, effect: effect })));
       },
       effectResolved: function effectResolved(effectId, result) {
-        var effectName = result && result.name || '';
-        var action = (0, _sanitize2.default)({ effectId: effectId, result: result });
-
-        sendMessage({
-          label: 'effectResolved' + (effectName ? '(' + effectName + ')' : ''),
-          type: 'effectResolved',
-          action: action
-        });
+        sendMessage(_extends({
+          type: '@saga_effectResolved'
+        }, (0, _sanitize2.default)({ effectId: effectId, result: result })));
       },
       effectRejected: function effectRejected(effectId, error) {
-        var errorMessage = readFromPath(error, 'message', false);
 
-        sendMessage({
-          label: 'effectRejected' + (errorMessage ? ' (' + errorMessage + ')' : ''),
-          type: 'effectRejected',
-          action: (0, _sanitize2.default)({ effectId: effectId, error: error })
-        });
+        sendMessage(_extends({
+          type: '@saga_effectRejected'
+        }, (0, _sanitize2.default)({ effectId: effectId, error: error })));
       },
       effectCancelled: function effectCancelled(effectId) {
         sendMessage({
-          label: 'effectCancelled',
-          type: 'effectCancelled',
-          action: (0, _sanitize2.default)({ effectId: effectId })
+          type: '@saga_effectCancelled',
+          effectId: effectId
         });
       },
       actionDispatched: function actionDispatched(action) {
-        sendMessage({
-          label: 'actionDispatched (' + action.type + ')',
-          type: 'actionDispatched(' + action.type + ')',
-          action: (0, _sanitize2.default)({ action: action })
-        });
+        sendMessage(_extends({
+          type: '@saga_actionDispatched'
+        }, (0, _sanitize2.default)({ action: action })));
       }
     },
     setStore: function setStore(s) {
@@ -173,7 +96,6 @@ function message(data) {
   if (typeof window === 'undefined') return;
 
   window.top.postMessage(_extends({
-    source: 'stent',
     time: new Date().getTime(),
     uid: uid
   }, data), '*');

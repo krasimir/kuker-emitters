@@ -166,7 +166,6 @@ function message(data) {
   if (typeof window === 'undefined') return;
 
   window.top.postMessage(_extends({
-    source: 'stent',
     time: new Date().getTime(),
     uid: uid
   }, data), '*');
