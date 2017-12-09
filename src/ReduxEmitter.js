@@ -14,6 +14,7 @@ export default function ReduxEmitter() {
 
       message({
         state: sanitize(getState()),
+        type: action.type,
         label: action.type,
         action: sanitize(action),
         icon,

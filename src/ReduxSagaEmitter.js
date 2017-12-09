@@ -22,6 +22,21 @@ const sendMessage = function (data) {
   }, uid);
 };
 
+const readFromPath = function (object, path, fallback = '') {
+  if (!object) return fallback;
+
+  const parts = path.split('.');
+  const key = parts.shift();
+
+  if (object[key]) {
+    if (parts.length > 0) {
+      return readFromPath(object[key], parts.join('.'), fallback);
+    }
+    return object[key];
+  }
+  return fallback;
+};
+
 const getEffectName = function (effect) {
   if (effect && typeof effect === 'object') {
     if (effect.root === true) {
@@ -40,49 +55,74 @@ const Emitter = () => {
   return {
     sagaMonitor: {
       effectTriggered({ effectId, parentEffectId, label, effect }) {
+        const action = sanitize({ effectId, parentEffectId, label, effect });
         const effectName = getEffectName(effect) || '';
+        const saga = readFromPath(action, 'effect.saga.__func', false);
+        const fn = readFromPath(action, `effect.${ effectName }.fn.__func`, false);
+        const selector = readFromPath(action, `effect.${ effectName }.selector.__func`, false);
+        const args = readFromPath(action, `effect.${ effectName }.args`, false);
+        const pattern = readFromPath(action, `effect.${ effectName }.pattern`, false);
+
+        let eventLabel = 'effectTriggered';
+        let type = 'effectTriggered' + (effectName ? `(${ effectName })` : '');
+
+        if (saga) {
+          eventLabel = 'effectTriggered' + (saga ? ` (${ saga })` : '');
+        } else if (pattern) {
+          eventLabel = 'effectTriggered' + (pattern ? ` (${ effectName }(${ pattern }))` : '');
+        } else if (fn) {
+          if (args) {
+            eventLabel = 'effectTriggered' + (fn ? ` (${ fn }(${ args }))` : '');
+            type = `effectTriggered(${ fn })`;
+          } else {
+            eventLabel = 'effectTriggered' + (fn ? ` (${ effectName }(${ fn }))` : '');
+          }
+        } else if (selector) {
+          if (args) {
+            eventLabel = 'effectTriggered' + (selector ? ` (${ selector }(${ args }))` : '');
+            type = `effectTriggered(${ selector })`;
+          } else {
+            eventLabel = 'effectTriggered' + (selector ? ` (${ effectName }(${ selector }))` : '');
+          }
+        }
 
         sendMessage({
-          label: 'effectTriggered' + (effectName ? `(${ effectName })` : ''),
-          effectName,
-          action: sanitize({
-            effectId, parentEffectId, label, effect
-          })
+          type,
+          label: eventLabel,
+          action
         });
       },
       effectResolved(effectId, result) {
         const effectName = (result && result.name) || '';
+        const action = sanitize({ effectId, result });
 
         sendMessage({
           label: 'effectResolved' + (effectName ? `(${ effectName })` : ''),
-          effectName,
-          action: sanitize({
-            effectId, result
-          })
+          type: 'effectResolved',
+          action
         });
       },
       effectRejected(effectId, error) {
+        const errorMessage = readFromPath(error, 'message', false);
+
         sendMessage({
-          label: 'effectRejected',
-          action: sanitize({
-            effectId, error
-          })
+          label: 'effectRejected' + (errorMessage ? ` (${ errorMessage })` : ''),
+          type: 'effectRejected',
+          action: sanitize({ effectId, error })
         });
       },
       effectCancelled(effectId) {
         sendMessage({
           label: 'effectCancelled',
-          action: sanitize({
-            effectId
-          })
+          type: 'effectCancelled',
+          action: sanitize({ effectId })
         });
       },
       actionDispatched(action) {
         sendMessage({
-          label: 'actionDispatched',
-          action: sanitize({
-            action
-          })
+          label: `actionDispatched (${ action.type })`,
+          type: `actionDispatched(${ action.type })`,
+          action: sanitize({ action })
         });
       }
     },

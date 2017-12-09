@@ -17,7 +17,9 @@
       "before": true,
       "it": true,
       "expect": true,
-      "sinon": true
+      "sinon": true,
+      "afterEach": true,
+      "beforeEach": true
     },
   
     "parser": "babel-eslint",
