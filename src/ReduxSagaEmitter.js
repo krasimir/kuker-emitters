@@ -2,8 +2,6 @@
 import sanitize from './helpers/sanitize';
 import message from './helpers/message';
 
-const uid = 'redux';
-
 var store = null;
 
 const getState = function () {
@@ -15,7 +13,7 @@ const sendMessage = function (data) {
   message({
     state: sanitize(getState()),
     ...data
-  }, uid);
+  });
 };
 
 const Emitter = () => {

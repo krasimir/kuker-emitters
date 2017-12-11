@@ -1,14 +1,14 @@
 import sanitize from './helpers/sanitize';
 import message from './helpers/message';
 
-var Machine, uid;
+var Machine;
 
 const postMessage = (data) => {
   if (window && window.top && window.top.postMessage) {
     const machines = Object.keys(Machine.machines)
       .map(name => ({ name, state: sanitize(Machine.machines[name].state) }));
 
-    message({ state: machines, ...data }, uid);
+    message({ state: machines, ...data });
   } else {
     console.error('There is no window.postMessage available');
   }
@@ -41,9 +41,8 @@ const StentEmitter = {
   __sanitize: sanitize,
   __formatYielded: formatYielded,
   __message: message,
-  __initialize(m, uniqueId) {
+  __initialize(m) {
     Machine = m;
-    uid = uniqueId;
   },
   onMachineCreated(machine) {
     postMessage({

@@ -15,7 +15,7 @@ var _message2 = _interopRequireDefault(_message);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Machine, uid;
+var Machine;
 
 var postMessage = function postMessage(data) {
   if (window && window.top && window.top.postMessage) {
@@ -23,7 +23,7 @@ var postMessage = function postMessage(data) {
       return { name: name, state: (0, _sanitize2.default)(Machine.machines[name].state) };
     });
 
-    (0, _message2.default)(_extends({ state: machines }, data), uid);
+    (0, _message2.default)(_extends({ state: machines }, data));
   } else {
     console.error('There is no window.postMessage available');
   }
@@ -58,9 +58,8 @@ var StentEmitter = {
   __sanitize: _sanitize2.default,
   __formatYielded: formatYielded,
   __message: _message2.default,
-  __initialize: function __initialize(m, uniqueId) {
+  __initialize: function __initialize(m) {
     Machine = m;
-    uid = uniqueId;
   },
   onMachineCreated: function onMachineCreated(machine) {
     postMessage({
@@ -156,14 +155,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.default = message;
 function message(data) {
-  var uid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'emitter';
-
 
   if (typeof window === 'undefined') return;
 
   window.top.postMessage(_extends({
-    time: new Date().getTime(),
-    uid: uid
+    time: new Date().getTime()
   }, data), '*');
 };
 module.exports = exports['default'];

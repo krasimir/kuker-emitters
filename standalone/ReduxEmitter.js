@@ -14,8 +14,6 @@ var _message2 = _interopRequireDefault(_message);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var uid = 'redux';
-
 function ReduxEmitter() {
   return function middleware(_ref) {
     var getState = _ref.getState,
@@ -29,7 +27,7 @@ function ReduxEmitter() {
           state: (0, _sanitize2.default)(getState()),
           type: '@redux_ACTION',
           action: (0, _sanitize2.default)(action)
-        }, uid);
+        });
         return result;
       };
     };
@@ -45,14 +43,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.default = message;
 function message(data) {
-  var uid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'emitter';
-
 
   if (typeof window === 'undefined') return;
 
   window.top.postMessage(_extends({
-    time: new Date().getTime(),
-    uid: uid
+    time: new Date().getTime()
   }, data), '*');
 };
 module.exports = exports['default'];

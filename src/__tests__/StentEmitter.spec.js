@@ -54,7 +54,6 @@ describe('Given the StentEmitter', function () {
         connectReactComponent(Component).with('Foo').map(machine => ({}));
 
         expect(window.top.postMessage).to.be.calledWith({
-          uid: sinon.match.string,
           time: sinon.match.number,
           type: 'onMachineCreated',
           meta: { middlewares: 1 },

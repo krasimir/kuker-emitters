@@ -42,8 +42,7 @@ describe('Given the ReduxEmitter', function () {
           action: { b: { __func: 'b' }, type: 'INCREMENT', with: 42 },
           type: '@redux_ACTION',
           state: { a: { value: 42 }, b: [1, 2, 3, 4], c: { __func: 'c' }, d: { __func: 'd' } },
-          time: sinon.match.number,
-          uid: sinon.match.string
+          time: sinon.match.number
         });
       });
     });

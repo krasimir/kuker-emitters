@@ -16,8 +16,6 @@ var _message2 = _interopRequireDefault(_message);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var uid = 'redux';
-
 var store = null;
 
 var getState = function getState() {
@@ -28,7 +26,7 @@ var getState = function getState() {
 var sendMessage = function sendMessage(data) {
   (0, _message2.default)(_extends({
     state: (0, _sanitize2.default)(getState())
-  }, data), uid);
+  }, data));
 };
 
 var Emitter = function Emitter() {
@@ -84,14 +82,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.default = message;
 function message(data) {
-  var uid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'emitter';
-
 
   if (typeof window === 'undefined') return;
 
   window.top.postMessage(_extends({
-    time: new Date().getTime(),
-    uid: uid
+    time: new Date().getTime()
   }, data), '*');
 };
 module.exports = exports['default'];
