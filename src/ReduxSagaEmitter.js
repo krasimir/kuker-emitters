@@ -2,8 +2,6 @@
 import sanitize from './helpers/sanitize';
 import message from './helpers/message';
 
-const icon = 'fa-circle-o';
-const color = '#f7f5e3';
 const uid = 'redux';
 
 var store = null;
@@ -16,14 +14,12 @@ const getState = function () {
 const sendMessage = function (data) {
   message({
     state: sanitize(getState()),
-    icon,
-    color,
     ...data
   }, uid);
 };
 
 const Emitter = () => {
-  message({ pageRefresh: true, icon, color }, uid);
+  message({ pageRefresh: true }, uid);
 
   return {
     sagaMonitor: {

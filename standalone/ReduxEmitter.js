@@ -14,8 +14,6 @@ var _message2 = _interopRequireDefault(_message);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var icon = 'fa-gear';
-var color = '#e7f7e3';
 var uid = 'redux';
 
 function ReduxEmitter() {
@@ -23,7 +21,7 @@ function ReduxEmitter() {
     var getState = _ref.getState,
         dispatch = _ref.dispatch;
 
-    (0, _message2.default)({ pageRefresh: true, icon: icon, color: color }, uid);
+    (0, _message2.default)({ pageRefresh: true }, uid);
 
     return function (next) {
       return function (action) {
@@ -32,9 +30,7 @@ function ReduxEmitter() {
         (0, _message2.default)({
           state: (0, _sanitize2.default)(getState()),
           type: '@redux_ACTION',
-          action: (0, _sanitize2.default)(action),
-          icon: icon,
-          color: color
+          action: (0, _sanitize2.default)(action)
         }, uid);
         return result;
       };

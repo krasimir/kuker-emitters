@@ -40,19 +40,15 @@ describe('Given the ReduxEmitter', function () {
 
         expect(window.top.postMessage).to.be.calledWith({
           pageRefresh: true,
-          icon: sinon.match.string,
           time: sinon.match.number,
-          uid: sinon.match.string,
-          color: sinon.match.string
+          uid: sinon.match.string
         });
         expect(window.top.postMessage).to.be.calledWith({
           action: { b: { __func: 'b' }, type: 'INCREMENT', with: 42 },
           type: '@redux_ACTION',
           state: { a: { value: 42 }, b: [1, 2, 3, 4], c: { __func: 'c' }, d: { __func: 'd' } },
-          icon: sinon.match.string,
           time: sinon.match.number,
-          uid: sinon.match.string,
-          color: sinon.match.string
+          uid: sinon.match.string
         });
       });
     });
