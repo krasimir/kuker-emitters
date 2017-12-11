@@ -21,8 +21,6 @@ function ReduxEmitter() {
     var getState = _ref.getState,
         dispatch = _ref.dispatch;
 
-    (0, _message2.default)({ pageRefresh: true }, uid);
-
     return function (next) {
       return function (action) {
         var result = next(action);

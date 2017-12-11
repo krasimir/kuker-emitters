@@ -31,16 +31,6 @@ describe('Given the StentEmitter', function () {
     window.top.postMessage.restore();
   });
   describe('when adding the middleware', function () {
-    it('should post an action with `pageRefresh` set to true', function () {
-      expect(window.top.postMessage)
-        .to.be.calledOnce
-        .and.to.be.calledWith({
-          time: sinon.match.number,
-          uid: sinon.match.string,
-          pageRefresh: true,
-          state: []
-        });
-    });
     describe('and when we create a machine', function () {
       it('should dispatch a `onMachineCreated` message and serialize the machine', function () {
         const Component = () => <p>Hello world</p>;
@@ -276,17 +266,14 @@ describe('Given the StentEmitter', function () {
 
         const ConnectedComponent = connectReactComponent(Component).with('Foo').map(Foo => ({ a: 1 }));
 
-        expect(window.top.postMessage).to.be.calledTwice;
+        expect(window.top.postMessage).to.be.calledOnce;
         expect(window.top.postMessage.firstCall).to.be.calledWith(sinon.match({
-          pageRefresh: true
-        }));
-        expect(window.top.postMessage.secondCall).to.be.calledWith(sinon.match({
           type: 'onMachineCreated'
         }));
 
         const wrapper = mount(<ConnectedComponent />);
 
-        expect(window.top.postMessage).to.be.calledThrice;
+        expect(window.top.postMessage).to.be.calledTwice;
 
         expect(window.top.postMessage).to.be.calledWith(sinon.match({
           type: 'onMachineConnected',

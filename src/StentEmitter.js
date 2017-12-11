@@ -117,11 +117,7 @@ const StentEmitter = {
       meta: getMetaInfo({ ...meta, ...{ machines: sanitize(machines) }})
     });
   },
-  onMiddlewareRegister() {
-    postMessage({
-      pageRefresh: true
-    });
-  }
+  onMiddlewareRegister() {}
 };
 
 export default StentEmitter;

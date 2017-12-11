@@ -19,8 +19,6 @@ const sendMessage = function (data) {
 };
 
 const Emitter = () => {
-  message({ pageRefresh: true }, uid);
-
   return {
     sagaMonitor: {
       effectTriggered({ effectId, parentEffectId, label, effect }) {

@@ -32,8 +32,6 @@ var sendMessage = function sendMessage(data) {
 };
 
 var Emitter = function Emitter() {
-  (0, _message2.default)({ pageRefresh: true }, uid);
-
   return {
     sagaMonitor: {
       effectTriggered: function effectTriggered(_ref) {
