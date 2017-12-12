@@ -4,13 +4,13 @@ Small JavaScript files that emit events to the StentDevTools Chrome Extension.
 
 ## Installation
 
-`yarn add stent-dev-tools-emitters -D` or `npm install stent-dev-tools-emitters -D`.
+`yarn add kuker-emitters -D` or `npm install kuker-emitters -D`.
 
 ## Stent integration
 
 ```js
 import { Machine } from 'stent';
-import StentEmitter from 'stent-dev-tools-emitters/lib/StentEmitter';
+import StentEmitter from 'kuker-emitters/lib/StentEmitter';
 
 Machine.addMiddleware(StentEmitter);
 ```
@@ -19,7 +19,7 @@ Machine.addMiddleware(StentEmitter);
 
 ```js
 import { createStore, applyMiddleware } from 'redux';
-import ReduxEmitter from 'stent-dev-tools-emitters/lib/ReduxEmitter';
+import ReduxEmitter from 'kuker-emitters/lib/ReduxEmitter';
 
 const middleware = ReduxEmitter();
 
@@ -30,7 +30,7 @@ const store = createStore(<reducer>, applyMiddleware(middleware));
 
 ```js
 import { createStore, applyMiddleware } from 'redux';
-import ReduxSagaEmitter from 'stent-dev-tools-emitters/lib/ReduxSagaEmitter';
+import ReduxSagaEmitter from 'kuker-emitters/lib/ReduxSagaEmitter';
 import createSagaMiddleware from 'redux-saga';
 
 const emitter = ReduxSagaEmitter();
