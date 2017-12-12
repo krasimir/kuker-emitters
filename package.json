@@ -1,7 +1,7 @@
 {
-  "name": "stent-dev-tools-emitters",
+  "name": "kuker-emitters",
   "version": "3.1.0",
-  "description": "Emitters for Stent's Chrome extension",
+  "description": "Emitters for Kuker Chrome extension",
   "main": "lib",
   "scripts": {
     "build-to-lib": "babel src --out-dir lib",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/krasimir/stent-dev-tools-emitters.git"
+    "url": "git+https://github.com/krasimir/kuker-emitters.git"
   },
   "keywords": [
     "stent",
@@ -25,9 +25,9 @@
   "author": "Krasimir Tsonev",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/krasimir/stent-dev-tools-emitters/issues"
+    "url": "https://github.com/krasimir/kuker-emitters/issues"
   },
-  "homepage": "https://github.com/krasimir/stent-dev-tools-emitters#readme",
+  "homepage": "https://github.com/krasimir/kuker-emitters#readme",
   "devDependencies": {
     "babel-cli": "6.24.0",
     "babel-eslint": "^8.0.3",
