@@ -15,6 +15,7 @@
       "window": false,
       "describe": true,
       "before": true,
+      "after": true,
       "it": true,
       "expect": true,
       "sinon": true,

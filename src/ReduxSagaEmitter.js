@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import sanitize from './helpers/sanitize';
 import message from './helpers/message';
+import guard from './helpers/guard';
 
 var store = null;
 
@@ -17,6 +18,7 @@ const sendMessage = function (data) {
 };
 
 const Emitter = () => {
+  if (!guard()) return { sagaMonitor: null, setStore: () => {}};
   return {
     sagaMonitor: {
       effectTriggered({ effectId, parentEffectId, label, effect }) {

@@ -5,6 +5,7 @@ import { call, connect } from 'stent/lib/helpers';
 import { connect as connectReactComponent } from 'stent/lib/react';
 import { mount } from 'enzyme';
 import React from 'react';
+import { ID } from '../helpers/guard';
 
 const defaults = {
   name: 'Foo',
@@ -22,6 +23,12 @@ const createCircularStructure = function () {
 };
 
 describe('Given the StentEmitter', function () {
+  before(() => {
+    window[ID] = true;
+  });
+  after(() => {
+    window[ID] = false;
+  });
   beforeEach(() => {
     sinon.stub(window.top, 'postMessage');
     Machine.flush();

@@ -12,9 +12,20 @@ var _message = require('./helpers/message');
 
 var _message2 = _interopRequireDefault(_message);
 
+var _guard = require('./helpers/guard');
+
+var _guard2 = _interopRequireDefault(_guard);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var NOOP = function NOOP() {
+  return function (noop) {
+    return noop;
+  };
+};
+
 function ReduxEmitter() {
+  if (!(0, _guard2.default)()) return NOOP;
   return function middleware(_ref) {
     var getState = _ref.getState,
         dispatch = _ref.dispatch;
@@ -34,7 +45,17 @@ function ReduxEmitter() {
   };
 };
 module.exports = exports['default'];
-},{"./helpers/message":2,"./helpers/sanitize":3}],2:[function(require,module,exports){
+},{"./helpers/guard":2,"./helpers/message":3,"./helpers/sanitize":4}],2:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports.default = guard;
+var ID = exports.ID = '__kuker__is_here__';
+
+function guard() {
+  return typeof window !== 'undefined' && window[ID] === true;
+};
+},{}],3:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51,7 +72,7 @@ function message(data) {
   }, data), '*');
 };
 module.exports = exports['default'];
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -89,7 +110,7 @@ function sanitize(something) {
   return result;
 }
 module.exports = exports['default'];
-},{"./vendors/CircularJSON":4,"./vendors/SerializeError":5}],4:[function(require,module,exports){
+},{"./vendors/CircularJSON":5,"./vendors/SerializeError":6}],5:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -266,7 +287,7 @@ exports.default = {
   parse: parseRecursion
 };
 module.exports = exports['default'];
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 // Credits: https://github.com/sindresorhus/serialize-error
 
 'use strict';

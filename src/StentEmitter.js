@@ -1,5 +1,6 @@
 import sanitize from './helpers/sanitize';
 import message from './helpers/message';
+import guard from './helpers/guard';
 
 var Machine;
 
@@ -45,6 +46,7 @@ const StentEmitter = {
     Machine = m;
   },
   onMachineCreated(machine) {
+    if (!guard()) return;
     postMessage({
       type: 'onMachineCreated',
       machine: sanitize(machine),
@@ -52,6 +54,7 @@ const StentEmitter = {
     });
   },
   onActionDispatched(actionName, ...args) {
+    if (!guard()) return;
     postMessage({
       type: 'onActionDispatched',
       actionName,
@@ -61,6 +64,7 @@ const StentEmitter = {
     });
   },
   onActionProcessed(actionName, ...args) {
+    if (!guard()) return;
     postMessage({
       type: 'onActionProcessed',
       actionName,
@@ -70,6 +74,7 @@ const StentEmitter = {
     });
   },
   onStateWillChange() {
+    if (!guard()) return;
     postMessage({
       type: 'onStateWillChange',
       machine: sanitize(this),
@@ -77,6 +82,7 @@ const StentEmitter = {
     });
   },
   onStateChanged() {
+    if (!guard()) return;
     postMessage({
       type: 'onStateChanged',
       machine: sanitize(this),
@@ -84,6 +90,7 @@ const StentEmitter = {
     });
   },
   onGeneratorStep(yielded) {
+    if (!guard()) return;
     postMessage({
       type: 'onGeneratorStep',
       yielded: formatYielded(yielded),
@@ -91,6 +98,7 @@ const StentEmitter = {
     });
   },
   onGeneratorEnd(value) {
+    if (!guard()) return;
     postMessage({
       type: 'onGeneratorEnd',
       value: sanitize(value),
@@ -98,6 +106,7 @@ const StentEmitter = {
     });
   },
   onGeneratorResumed(value) {
+    if (!guard()) return;
     postMessage({
       type: 'onGeneratorResumed',
       value: sanitize(value),
@@ -105,12 +114,14 @@ const StentEmitter = {
     });
   },
   onMachineConnected(machines, meta) {
+    if (!guard()) return;
     postMessage({
       type: 'onMachineConnected',
       meta: getMetaInfo({ ...meta, ...{ machines: sanitize(machines) }})
     });
   },
   onMachineDisconnected(machines, meta) {
+    if (!guard()) return;
     postMessage({
       type: 'onMachineDisconnected',
       meta: getMetaInfo({ ...meta, ...{ machines: sanitize(machines) }})

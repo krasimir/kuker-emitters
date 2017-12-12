@@ -13,6 +13,10 @@ var _message = require('./helpers/message');
 
 var _message2 = _interopRequireDefault(_message);
 
+var _guard = require('./helpers/guard');
+
+var _guard2 = _interopRequireDefault(_guard);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Machine;
@@ -62,6 +66,7 @@ var StentEmitter = {
     Machine = m;
   },
   onMachineCreated: function onMachineCreated(machine) {
+    if (!(0, _guard2.default)()) return;
     postMessage({
       type: 'onMachineCreated',
       machine: (0, _sanitize2.default)(machine),
@@ -69,6 +74,8 @@ var StentEmitter = {
     });
   },
   onActionDispatched: function onActionDispatched(actionName) {
+    if (!(0, _guard2.default)()) return;
+
     for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
     }
@@ -82,6 +89,8 @@ var StentEmitter = {
     });
   },
   onActionProcessed: function onActionProcessed(actionName) {
+    if (!(0, _guard2.default)()) return;
+
     for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
       args[_key2 - 1] = arguments[_key2];
     }
@@ -95,6 +104,7 @@ var StentEmitter = {
     });
   },
   onStateWillChange: function onStateWillChange() {
+    if (!(0, _guard2.default)()) return;
     postMessage({
       type: 'onStateWillChange',
       machine: (0, _sanitize2.default)(this),
@@ -102,6 +112,7 @@ var StentEmitter = {
     });
   },
   onStateChanged: function onStateChanged() {
+    if (!(0, _guard2.default)()) return;
     postMessage({
       type: 'onStateChanged',
       machine: (0, _sanitize2.default)(this),
@@ -109,6 +120,7 @@ var StentEmitter = {
     });
   },
   onGeneratorStep: function onGeneratorStep(yielded) {
+    if (!(0, _guard2.default)()) return;
     postMessage({
       type: 'onGeneratorStep',
       yielded: formatYielded(yielded),
@@ -116,6 +128,7 @@ var StentEmitter = {
     });
   },
   onGeneratorEnd: function onGeneratorEnd(value) {
+    if (!(0, _guard2.default)()) return;
     postMessage({
       type: 'onGeneratorEnd',
       value: (0, _sanitize2.default)(value),
@@ -123,6 +136,7 @@ var StentEmitter = {
     });
   },
   onGeneratorResumed: function onGeneratorResumed(value) {
+    if (!(0, _guard2.default)()) return;
     postMessage({
       type: 'onGeneratorResumed',
       value: (0, _sanitize2.default)(value),
@@ -130,12 +144,14 @@ var StentEmitter = {
     });
   },
   onMachineConnected: function onMachineConnected(machines, meta) {
+    if (!(0, _guard2.default)()) return;
     postMessage({
       type: 'onMachineConnected',
       meta: getMetaInfo(_extends({}, meta, { machines: (0, _sanitize2.default)(machines) }))
     });
   },
   onMachineDisconnected: function onMachineDisconnected(machines, meta) {
+    if (!(0, _guard2.default)()) return;
     postMessage({
       type: 'onMachineDisconnected',
       meta: getMetaInfo(_extends({}, meta, { machines: (0, _sanitize2.default)(machines) }))
@@ -146,7 +162,17 @@ var StentEmitter = {
 
 exports.default = StentEmitter;
 module.exports = exports['default'];
-},{"./helpers/message":2,"./helpers/sanitize":3}],2:[function(require,module,exports){
+},{"./helpers/guard":2,"./helpers/message":3,"./helpers/sanitize":4}],2:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports.default = guard;
+var ID = exports.ID = '__kuker__is_here__';
+
+function guard() {
+  return typeof window !== 'undefined' && window[ID] === true;
+};
+},{}],3:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -163,7 +189,7 @@ function message(data) {
   }, data), '*');
 };
 module.exports = exports['default'];
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -201,7 +227,7 @@ function sanitize(something) {
   return result;
 }
 module.exports = exports['default'];
-},{"./vendors/CircularJSON":4,"./vendors/SerializeError":5}],4:[function(require,module,exports){
+},{"./vendors/CircularJSON":5,"./vendors/SerializeError":6}],5:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -378,7 +404,7 @@ exports.default = {
   parse: parseRecursion
 };
 module.exports = exports['default'];
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 // Credits: https://github.com/sindresorhus/serialize-error
 
 'use strict';

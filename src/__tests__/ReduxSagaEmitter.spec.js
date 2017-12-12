@@ -3,6 +3,7 @@ import { createStore, applyMiddleware } from 'redux';
 import ReduxSagaEmitter from '../ReduxSagaEmitter';
 import createSagaMiddleware from 'redux-saga';
 import { take, takeEvery, call, fork, put, select } from 'redux-saga/effects';
+import { ID } from '../helpers/guard';
 
 const initialState = () => ({
   a: {
@@ -47,6 +48,12 @@ const myRootSaga3 = function * () {
 var messages = [];
 
 describe('Given the ReduxSagaEmitter', function () {
+  before(() => {
+    window[ID] = true;
+  });
+  after(() => {
+    window[ID] = false;
+  });
   beforeEach(() => {
     messages = [];
     sinon.stub(window.top, 'postMessage').callsFake(message => messages.push(message));

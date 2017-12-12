@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars, no-undef */
 import { createStore, applyMiddleware } from 'redux';
 import ReduxEmitter from '../ReduxEmitter';
+import { ID } from '../helpers/guard';
 
 const initialState = {
   a: {
@@ -22,9 +23,14 @@ const counter = (state = initialState, action) => {
       return state;
   }
 };
-const middleware = ReduxEmitter();
 
 describe('Given the ReduxEmitter', function () {
+  before(() => {
+    window[ID] = true;
+  });
+  after(() => {
+    window[ID] = false;
+  });
   beforeEach(() => {
     sinon.stub(window.top, 'postMessage');
   });
@@ -34,6 +40,7 @@ describe('Given the ReduxEmitter', function () {
   describe('when adding the emitter as a Redux middleware', function () {
     describe('and when we dispatch an action', function () {
       it('should dispatch an event to Stent extension', function () {
+        const middleware = ReduxEmitter();
         const store = createStore(counter, applyMiddleware(middleware));
 
         store.dispatch({ type: 'INCREMENT', with: 42, b: function () {} });
