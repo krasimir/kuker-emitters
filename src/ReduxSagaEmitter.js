@@ -7,7 +7,7 @@ var store = null;
 
 const getState = function () {
   if (store) return store.getState();
-  return { '<unknown>': 'Please check https://github.com/krasimir/stent-dev-tools-emitters to learn how to get the state in here.' };
+  return { '<unknown>': 'You forgot to call `emitter.setStore(<your store>)`. Please check https://github.com/krasimir/kuker-emitters' };
 };
 
 const sendMessage = function (data) {
@@ -53,6 +53,6 @@ export default function ReduxSagaEmitter() {
         });
       }
     },
-    setStore: s => (store = s)
+    setStore: function (s) { store = s; }
   };
 };
