@@ -17,7 +17,7 @@ const sendMessage = function (data) {
   });
 };
 
-const Emitter = () => {
+export default function ReduxSagaEmitter() {
   if (!guard()) return { sagaMonitor: null, setStore: () => {}};
   return {
     sagaMonitor: {
@@ -56,5 +56,3 @@ const Emitter = () => {
     setStore: s => (store = s)
   };
 };
-
-export default Emitter;
