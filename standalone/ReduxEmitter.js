@@ -67,7 +67,7 @@ function message(data) {
 
   if (typeof window === 'undefined') return;
 
-  window.top.postMessage(_extends({
+  window.postMessage(_extends({
     time: new Date().getTime()
   }, data), '*');
 };
