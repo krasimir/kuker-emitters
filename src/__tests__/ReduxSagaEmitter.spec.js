@@ -63,7 +63,7 @@ describe('Given the ReduxSagaEmitter', function () {
   });
   describe('when adding the emitter as a Redux middleware', function () {
     describe('and when we dispatch an action', function () {
-      describe('should dispatch an event to Stent extension', function () {
+      describe('should dispatch an event to Kuker extension', function () {
         [
           {
             desc: 'should send effectTriggered(root) event',

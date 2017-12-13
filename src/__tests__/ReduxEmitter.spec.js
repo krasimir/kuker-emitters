@@ -39,7 +39,7 @@ describe('Given the ReduxEmitter', function () {
   });
   describe('when adding the emitter as a Redux middleware', function () {
     describe('and when we dispatch an action', function () {
-      it('should dispatch an event to Stent extension', function () {
+      it('should dispatch an event to Kuker extension', function () {
         const middleware = ReduxEmitter();
         const store = createStore(counter, applyMiddleware(middleware));
 

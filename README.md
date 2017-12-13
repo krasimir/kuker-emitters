@@ -10,7 +10,27 @@ Pluggable modules that send events to [Kuker](https://github.com/krasimir/kuker)
 
 *These standalone files work via [rawgit](https://rawgit.com/krasimir/kuker-emitters/master/standalone/ReduxEmitter.js) too.*
 
+## BaseEmitter
+
+![base emitter](./img/screenshot_custom_event.jpg)
+
+```js
+import BaseEmitter from 'kuker-emitters/lib/BaseEmitter';
+
+const emit = BaseEmitter();
+
+emit({
+  type: 'adding money to my account',
+  label: 'hello',
+  state: { bank: { money: 100 } },
+  icon: 'fa-money',
+  color: '#bada55'
+});
+```
+
 ## Integration with [Redux](https://redux.js.org/)
+
+![base emitter](./img/redux_screenshot_2.jpg)
 
 ```js
 import { createStore, applyMiddleware } from 'redux';
@@ -24,6 +44,8 @@ const store = createStore(<reducer>, applyMiddleware(middleware));
 [Codepen](https://codepen.io/krasimir/pen/vpYrqw) to play with.
 
 ## Integration with [redux-saga](https://redux-saga.js.org/)
+
+![base emitter](./img/redux_screenshot_1280x800.jpg)
 
 ```js
 import { createStore, applyMiddleware } from 'redux';
@@ -45,6 +67,8 @@ sagaMiddleware.run(rootSaga)
 [Codepen](https://codepen.io/krasimir/pen/vpYrqw) to play with.
 
 ## Integration with [Stent](https://github.com/krasimir/stent)
+
+![base emitter](./img/stent_screenshot_1280x800.jpg)
 
 ```js
 import { Machine } from 'stent';
