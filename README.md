@@ -6,7 +6,7 @@ Pluggable modules that send events to [Kuker](https://github.com/krasimir/kuker)
 
 ## Installation
 
-`yarn add kuker-emitters -D` or `npm install kuker-emitters -D`. There're also standalone versions in [here](./standalone). You may grab the files, include them in your page and you'll globals like `ReduxEmitter`, `ReduxSagaEmitter` or `StentEmitter`.
+`yarn add kuker-emitters -D` or `npm install kuker-emitters -D`. There're also standalone versions in [here](./standalone). You may grab the files, include them in your page and you'll have globals like `ReduxEmitter`, `ReduxSagaEmitter` or `StentEmitter`.
 
 *These standalone files work via [rawgit](https://rawgit.com/krasimir/kuker-emitters/master/standalone/ReduxEmitter.js) too.*
 
