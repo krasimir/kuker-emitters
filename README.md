@@ -21,6 +21,8 @@ const middleware = ReduxEmitter();
 const store = createStore(<reducer>, applyMiddleware(middleware));
 ```
 
+[Codepen](https://codepen.io/krasimir/pen/vpYrqw) to play with.
+
 ## Integration with [redux-saga](https://redux-saga.js.org/)
 
 ```js
@@ -40,6 +42,8 @@ emitter.setStore(store);
 sagaMiddleware.run(rootSaga)
 ```
 
+[Codepen](https://codepen.io/krasimir/pen/vpYrqw) to play with.
+
 ## Integration with [Stent](https://github.com/krasimir/stent)
 
 ```js
@@ -48,3 +52,5 @@ import StentEmitter from 'kuker-emitters/lib/StentEmitter';
 
 Machine.addMiddleware(StentEmitter);
 ```
+
+[Codepen](https://codepen.io/krasimir/pen/YEjYvR) to play with.
