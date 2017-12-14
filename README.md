@@ -26,6 +26,8 @@ emit({
 });
 ```
 
+[Codepen example](https://codepen.io/krasimir/pen/ypNVVm)
+
 ## Integration with [Redux](https://redux.js.org/)
 
 ```js
