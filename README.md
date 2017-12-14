@@ -12,8 +12,6 @@ Pluggable modules that send events to [Kuker](https://github.com/krasimir/kuker)
 
 ## BaseEmitter
 
-![base emitter](./img/screenshot_custom_event.jpg)
-
 ```js
 import BaseEmitter from 'kuker-emitters/lib/BaseEmitter';
 
@@ -30,8 +28,6 @@ emit({
 
 ## Integration with [Redux](https://redux.js.org/)
 
-![base emitter](./img/redux_screenshot_2.jpg)
-
 ```js
 import { createStore, applyMiddleware } from 'redux';
 import ReduxEmitter from 'kuker-emitters/lib/ReduxEmitter';
@@ -41,11 +37,9 @@ const middleware = ReduxEmitter();
 const store = createStore(<reducer>, applyMiddleware(middleware));
 ```
 
-[Codepen](https://codepen.io/krasimir/pen/vpYrqw) to play with.
+[Codepen example](https://codepen.io/krasimir/pen/vpYrqw)
 
 ## Integration with [redux-saga](https://redux-saga.js.org/)
-
-![base emitter](./img/redux_screenshot_1280x800.jpg)
 
 ```js
 import { createStore, applyMiddleware } from 'redux';
@@ -64,11 +58,9 @@ emitter.setStore(store);
 sagaMiddleware.run(rootSaga)
 ```
 
-[Codepen](https://codepen.io/krasimir/pen/vpYrqw) to play with.
+[Codepen example](https://codepen.io/krasimir/pen/vpYrqw)
 
 ## Integration with [Stent](https://github.com/krasimir/stent)
-
-![base emitter](./img/stent_screenshot_1280x800.jpg)
 
 ```js
 import { Machine } from 'stent';
@@ -77,4 +69,4 @@ import StentEmitter from 'kuker-emitters/lib/StentEmitter';
 Machine.addMiddleware(StentEmitter);
 ```
 
-[Codepen](https://codepen.io/krasimir/pen/YEjYvR) to play with.
+[Codepen example](https://codepen.io/krasimir/pen/YEjYvR)
