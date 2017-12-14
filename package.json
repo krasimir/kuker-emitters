@@ -1,6 +1,6 @@
 {
   "name": "kuker-emitters",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Emitters for Kuker Chrome extension",
   "main": "lib",
   "scripts": {
@@ -9,7 +9,8 @@
     "build-redux": "browserify ./lib/ReduxEmitter.js -o ./standalone/ReduxEmitter.js --standalone ReduxEmitter && uglifyjs ./standalone/ReduxEmitter.js -o ./standalone/ReduxEmitter.min.js",
     "build-redux-saga": "browserify ./lib/ReduxSagaEmitter.js -o ./standalone/ReduxSagaEmitter.js --standalone ReduxSagaEmitter && uglifyjs ./standalone/ReduxSagaEmitter.js -o ./standalone/ReduxSagaEmitter.min.js",
     "build-base": "browserify ./lib/BaseEmitter.js -o ./standalone/BaseEmitter.js --standalone BaseEmitter && uglifyjs ./standalone/BaseEmitter.js -o ./standalone/BaseEmitter.min.js",
-    "build": "npm run test && npm run build-to-lib && npm run build-stent && npm run build-redux && npm run build-redux-saga && npm run build-base",
+    "build-machina": "browserify ./lib/MachinaEmitter.js -o ./standalone/MachinaEmitter.js --standalone MachinaEmitter && uglifyjs ./standalone/MachinaEmitter.js -o ./standalone/MachinaEmitter.min.js",
+    "build": "npm run test && npm run build-to-lib && npm run build-stent && npm run build-redux && npm run build-redux-saga && npm run build-base && npm run build-machina",
     "test": "./node_modules/.bin/mocha --require babel-register --require babel-polyfill --require test/setup.js --require jsdom-global/register --reporter spec --slow 100 './src/**/**.spec.{js,jsx}'",
     "test:watch": "./node_modules/.bin/mocha --require babel-register --require babel-polyfill --require test/setup.js --require jsdom-global/register --reporter spec --slow 100 --watch --watch-extensions jx,jsx,json './src/**/**.spec.{js,jsx}'"
   },
@@ -41,11 +42,13 @@
     "browserify": "^14.4.0",
     "chai": "3.5.0",
     "chai-enzyme": "0.6.1",
+    "chai-subset": "^1.6.0",
     "enzyme": "2.7.1",
     "eslint": "^4.12.1",
     "istanbul": "1.1.0-alpha.1",
     "jsdom": "9.8.3",
     "jsdom-global": "2.1.1",
+    "machina": "^2.0.0",
     "mocha": "3.2.0",
     "react": "15.4.2",
     "react-addons-test-utils": "15.4.2",
@@ -55,7 +58,6 @@
     "sinon": "2.0.0",
     "sinon-chai": "2.9.0",
     "stent": "^3.6.6",
-    "uglify-js": "^3.0.28",
-    "chai-subset": "^1.6.0"
+    "uglify-js": "^3.0.28"
   }
 }
