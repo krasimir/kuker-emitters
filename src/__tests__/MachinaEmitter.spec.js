@@ -96,6 +96,7 @@ describe('Given the MachinaEmitter', function () {
         {
           data: { delegated: false, inputType: 'pedestrianWaiting', namespace: 'vehicle-signal' },
           state: 'uninitialized',
+          label: 'uninitialized',
           time: sinon.match.number,
           type: 'Machina_handling'
         },
@@ -109,6 +110,7 @@ describe('Given the MachinaEmitter', function () {
             state: 'uninitialized'
           },
           state: 'uninitialized',
+          label: 'uninitialized',
           time: sinon.match.number,
           type: 'Machina_deferred'
         },
@@ -120,12 +122,14 @@ describe('Given the MachinaEmitter', function () {
             toState: 'green'
           },
           state: 'green',
+          label: 'green',
           time: sinon.match.number,
           type: 'Machina_transition'
         },
         {
           data: { status: 'GREEN' },
           state: 'green',
+          label: 'green',
           time: sinon.match.number,
           type: 'Machina_vehicles'
         },
@@ -137,18 +141,21 @@ describe('Given the MachinaEmitter', function () {
             toState: 'green'
           },
           state: 'green',
+          label: 'green',
           time: sinon.match.number,
           type: 'Machina_transitioned'
         },
         {
           data: { delegated: false, inputType: 'pedestrianWaiting', namespace: 'vehicle-signal' },
           state: 'green',
+          label: 'green',
           time: sinon.match.number,
           type: 'Machina_handling'
         },
         {
           data: { delegated: false, inputType: 'pedestrianWaiting', namespace: 'vehicle-signal' },
           state: 'green',
+          label: 'green',
           time: sinon.match.number,
           type: 'Machina_handled'
         }

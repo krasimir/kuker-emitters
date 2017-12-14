@@ -8,6 +8,7 @@ export default function MachinaEmitter(machine) {
   machine.on('*', function (eventName, data) {
     message({
       type: `Machina_${ eventName }`,
+      label: typeof machine.state === 'string' ? machine.state : '',
       state: sanitize(machine.state),
       data: sanitize(data)
     });

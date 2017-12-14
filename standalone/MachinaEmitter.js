@@ -24,6 +24,7 @@ function MachinaEmitter(machine) {
   machine.on('*', function (eventName, data) {
     (0, _message2.default)({
       type: 'Machina_' + eventName,
+      label: typeof machine.state === 'string' ? machine.state : '',
       state: (0, _sanitize2.default)(machine.state),
       data: (0, _sanitize2.default)(data)
     });
