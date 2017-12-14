@@ -72,3 +72,16 @@ Machine.addMiddleware(StentEmitter);
 ```
 
 [Codepen example](https://codepen.io/krasimir/pen/YEjYvR)
+
+## Integration with [Machina.js](http://machina-js.org/)
+
+```js
+import machina from 'machina';
+import MachinaEmitter from 'kuker-emitters/lib/MachinaEmitter';
+
+const machine = new machina.Fsm({...});
+
+MachinaEmitter(machine);
+```
+
+[Codepen example](https://codepen.io/krasimir/pen/aEOpvE)
