@@ -39,7 +39,8 @@ exports.default = guard;
 var ID = exports.ID = '__kuker__is_here__';
 
 function guard() {
-  return typeof window !== 'undefined' && window[ID] === true;
+  return true;
+  // return typeof window !== 'undefined' && window[ID] === true;
 };
 },{}],3:[function(require,module,exports){
 'use strict';
