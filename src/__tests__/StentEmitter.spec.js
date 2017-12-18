@@ -94,7 +94,9 @@ describe('Given the StentEmitter', function () {
             'success': {
               '__func': '<anonymous>'
             }
-          }
+          },
+          origin: sinon.match.string,
+          kuker: true
         });
       });
     });

@@ -2,7 +2,22 @@
 
 ![kuker](./img/kuker_banner.jpg)
 
-Pluggable modules that send events to [Kuker](https://github.com/krasimir/kuker). 
+Pluggable modules that send events to [Kuker](https://github.com/krasimir/kuker). These emitters are framework specific and provide nicely formatted output. If you want to send a message manually you are free do it by calling:
+
+```js
+window.postMessage({
+  kuker: true,
+  type: 'adding money to my account',
+  origin: 'something',
+  label: 'hello',
+  time: (new Date()).getTime(),
+  state: { bank: { money: 100 } },
+  icon: 'fa-money',
+  color: '#bada55'
+}, '*');
+```
+
+`kuker: true` and `type` are mandatory.
 
 ## Installation
 

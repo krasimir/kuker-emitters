@@ -98,7 +98,9 @@ describe('Given the MachinaEmitter', function () {
           state: 'uninitialized',
           label: 'uninitialized',
           time: sinon.match.number,
-          type: 'Machina_handling'
+          type: 'Machina_handling',
+          origin: sinon.match.string,
+          kuker: true
         },
         {
           data: {
@@ -112,7 +114,9 @@ describe('Given the MachinaEmitter', function () {
           state: 'uninitialized',
           label: 'uninitialized',
           time: sinon.match.number,
-          type: 'Machina_deferred'
+          type: 'Machina_deferred',
+          origin: sinon.match.string,
+          kuker: true
         },
         {
           data: {
@@ -124,14 +128,18 @@ describe('Given the MachinaEmitter', function () {
           state: 'green',
           label: 'green',
           time: sinon.match.number,
-          type: 'Machina_transition'
+          type: 'Machina_transition',
+          origin: sinon.match.string,
+          kuker: true
         },
         {
           data: { status: 'GREEN' },
           state: 'green',
           label: 'green',
           time: sinon.match.number,
-          type: 'Machina_vehicles'
+          type: 'Machina_vehicles',
+          origin: sinon.match.string,
+          kuker: true
         },
         {
           data: {
@@ -143,21 +151,27 @@ describe('Given the MachinaEmitter', function () {
           state: 'green',
           label: 'green',
           time: sinon.match.number,
-          type: 'Machina_transitioned'
+          type: 'Machina_transitioned',
+          origin: sinon.match.string,
+          kuker: true
         },
         {
           data: { delegated: false, inputType: 'pedestrianWaiting', namespace: 'vehicle-signal' },
           state: 'green',
           label: 'green',
           time: sinon.match.number,
-          type: 'Machina_handling'
+          type: 'Machina_handling',
+          origin: sinon.match.string,
+          kuker: true
         },
         {
           data: { delegated: false, inputType: 'pedestrianWaiting', namespace: 'vehicle-signal' },
           state: 'green',
           label: 'green',
           time: sinon.match.number,
-          type: 'Machina_handled'
+          type: 'Machina_handled',
+          origin: sinon.match.string,
+          kuker: true
         }
       ].forEach(expectation => {
         expect(window.top.postMessage).to.be.calledWith(expectation, '*');
