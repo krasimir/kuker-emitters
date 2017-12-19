@@ -50,12 +50,7 @@ exports.__esModule = true;
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 exports.default = message;
-
-var _socket = require('./socket');
-
-var _socket2 = _interopRequireDefault(_socket);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+// import postMessageViaSocket from './socket';
 
 function getOrigin() {
   if (typeof location !== 'undefined' && location.protocol && location.host && location.pathname) {
@@ -66,7 +61,7 @@ function getOrigin() {
 
 function message(data) {
   if (typeof window === 'undefined') {
-    (0, _socket2.default)(data);
+    // postMessageViaSocket(data);
     return;
   }
 
@@ -77,7 +72,7 @@ function message(data) {
   }, data), '*');
 };
 module.exports = exports['default'];
-},{"./socket":5}],4:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -115,84 +110,7 @@ function sanitize(something) {
   return result;
 }
 module.exports = exports['default'];
-},{"./vendors/CircularJSON":6,"./vendors/SerializeError":7}],5:[function(require,module,exports){
-'use strict';
-
-exports.__esModule = true;
-exports.PORT = undefined;
-exports.default = postMessageViaSocket;
-
-var _socket = require('socket.io');
-
-var _socket2 = _interopRequireDefault(_socket);
-
-var _http = require('http');
-
-var _http2 = _interopRequireDefault(_http);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/* eslint-disable no-use-before-define */
-var PORT = exports.PORT = 8228;
-var KUKER_EVENT = 'kuker-event';
-var NEW_SESSION_EVENT = {
-  type: 'NEW_SESSION',
-  kuker: true,
-  time: new Date().getTime(),
-  origin: 'node (PORT: ' + PORT + ')'
-};
-var connections = {};
-var app = _http2.default.createServer(function (req, res) {
-  res.writeHead(200);
-  res.end('Add http://localhost:' + PORT + '/socket.io/socket.io.js to your page.');
-});
-var io = (0, _socket2.default)(app);
-
-io.on('connection', function (socket) {
-  connections[socket.id] = socket;
-  socket.on('disconnect', function (reason) {
-    delete connections[socket.id];
-  });
-  socket.emit(KUKER_EVENT, [NEW_SESSION_EVENT].concat(S.messages));
-  // socket.on('received', () => console.log('received'));
-});
-
-var S = {
-  state: 'setup',
-  messages: [],
-  log: function log(what) {
-    console.log(what);
-  },
-  postMessage: function postMessage(message) {
-    var self = this;
-    // console.log(this.state, message);
-
-    if (this.state === 'ready') {
-      Object.keys(connections).forEach(function (id) {
-        return connections[id].emit(KUKER_EVENT, [message]);
-      });
-      this.messages.push(message);
-      return;
-    };
-    if (this.state === 'setup-in-progress') {
-      this.messages.push(message);
-      return;
-    }
-    this.messages.push(message);
-    this.state = 'setup-in-progress';
-    this.log('Kuker Emitter socket server works at ' + PORT + ' port.');
-    app.listen(PORT);
-    this.state = 'ready';
-    this.messages.forEach(function (message) {
-      self.postMessage(message);
-    });
-  }
-};
-
-function postMessageViaSocket(message) {
-  S.postMessage(message);
-};
-},{"http":undefined,"socket.io":undefined}],6:[function(require,module,exports){
+},{"./vendors/CircularJSON":5,"./vendors/SerializeError":6}],5:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -369,7 +287,7 @@ exports.default = {
   parse: parseRecursion
 };
 module.exports = exports['default'];
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 // Credits: https://github.com/sindresorhus/serialize-error
 
 'use strict';
