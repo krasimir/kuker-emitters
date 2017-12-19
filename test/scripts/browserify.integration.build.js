@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.BaseEmitter = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26,6 +26,7 @@ function BaseEmitter() {
   } : NOOP;
 };
 module.exports = exports['default'];
+
 },{"./helpers/guard":2,"./helpers/message":3,"./helpers/sanitize":4}],2:[function(require,module,exports){
 'use strict';
 
@@ -37,6 +38,7 @@ function guard() {
   return true;
   // return typeof window !== 'undefined' && window[ID] === true;
 };
+
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -72,6 +74,7 @@ function message(data) {
   }, data), '*');
 };
 module.exports = exports['default'];
+
 },{"./socket":5}],4:[function(require,module,exports){
 'use strict';
 
@@ -110,6 +113,7 @@ function sanitize(something) {
   return result;
 }
 module.exports = exports['default'];
+
 },{"./vendors/CircularJSON":6,"./vendors/SerializeError":7}],5:[function(require,module,exports){
 'use strict';
 
@@ -152,13 +156,14 @@ var S = {
     this.state = 'setup-in-progress';
 
     // *************************************** socket.io integration
+
     var r = 'require';
-    var socketIO = module[r]('socket.io');
-    var http = module[r]('http');
+    var socketIO = this[r]('socket.io');
+    var http = this[r]('http');
 
     var app = http.createServer(function (req, res) {
       res.writeHead(200);
-      res.end('Hello world');
+      res.end('Add http://localhost:' + PORT + '/socket.io/socket.io.js to your page.');
     });
     var io = socketIO(app);
 
@@ -171,7 +176,7 @@ var S = {
       // socket.on('received', () => console.log('received'));
     });
 
-    // this.log('Kuker Emitter socket server works at ' + PORT + ' port.');
+    this.log('Kuker Emitter socket server works at ' + PORT + ' port.');
     app.listen(PORT);
 
     // *************************************** socket.io integration
@@ -186,6 +191,7 @@ var S = {
 function postMessageViaSocket(message) {
   S.postMessage(message);
 };
+
 },{}],6:[function(require,module,exports){
 'use strict';
 
@@ -363,6 +369,7 @@ exports.default = {
   parse: parseRecursion
 };
 module.exports = exports['default'];
+
 },{}],7:[function(require,module,exports){
 // Credits: https://github.com/sindresorhus/serialize-error
 
@@ -438,5 +445,18 @@ function destroyCircular(from, seen) {
 
 	return to;
 }
-},{}]},{},[1])(1)
-});
+
+},{}],8:[function(require,module,exports){
+'use strict';
+
+var _BaseEmitter = require('../../src/BaseEmitter');
+
+var _BaseEmitter2 = _interopRequireDefault(_BaseEmitter);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var emit = (0, _BaseEmitter2.default)();
+
+emit({ type: 'bla', kuker: true });
+
+},{"../../src/BaseEmitter":1}]},{},[8]);

@@ -1,4 +1,4 @@
-// import postMessageViaSocket from './socket';
+import postMessageViaSocket from './socket';
 
 function getOrigin() {
   if (typeof location !== 'undefined' && location.protocol && location.host && location.pathname) {
@@ -9,7 +9,7 @@ function getOrigin() {
 
 export default function message(data) {
   if (typeof window === 'undefined') {
-    // postMessageViaSocket(data);
+    postMessageViaSocket(data);
     return;
   }
 

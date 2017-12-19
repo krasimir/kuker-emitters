@@ -1,6 +1,4 @@
 /* eslint-disable no-use-before-define */
-import socketIO from 'socket.io';
-import http from 'http';
 
 export const PORT = 8228;
 const KUKER_EVENT = 'kuker-event';
@@ -11,20 +9,6 @@ const NEW_SESSION_EVENT = {
   origin: `node (PORT: ${ PORT })`
 };
 const connections = {};
-const app = http.createServer(function (req, res) {
-  res.writeHead(200);
-  res.end(`Add http://localhost:${ PORT }/socket.io/socket.io.js to your page.`);
-});
-const io = socketIO(app);
-
-io.on('connection', function (socket) {
-  connections[socket.id] = socket;
-  socket.on('disconnect', reason => {
-    delete connections[socket.id];
-  });
-  socket.emit(KUKER_EVENT, [ NEW_SESSION_EVENT ].concat(S.messages));
-  // socket.on('received', () => console.log('received'));
-});
 
 const S = {
   state: 'setup',
@@ -47,8 +31,32 @@ const S = {
     }
     this.messages.push(message);
     this.state = 'setup-in-progress';
-    this.log('Kuker Emitter socket server works at ' + PORT + ' port.');
+
+    // *************************************** socket.io integration
+    const r = 'require';
+    const socketIO = module[r]('socket.io');
+    const http = module[r]('http');
+
+    const app = http.createServer(function (req, res) {
+      res.writeHead(200);
+      res.end('Hello world');
+    });
+    const io = socketIO(app);
+
+    io.on('connection', function (socket) {
+      connections[socket.id] = socket;
+      socket.on('disconnect', reason => {
+        delete connections[socket.id];
+      });
+      socket.emit(KUKER_EVENT, [ NEW_SESSION_EVENT ].concat(S.messages));
+      // socket.on('received', () => console.log('received'));
+    });
+
+    // this.log('Kuker Emitter socket server works at ' + PORT + ' port.');
     app.listen(PORT);
+
+    // *************************************** socket.io integration
+
     this.state = 'ready';
     this.messages.forEach(function (message) {
       self.postMessage(message);
