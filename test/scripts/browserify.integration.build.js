@@ -63,7 +63,11 @@ function getOrigin() {
 
 function message(data) {
   if (typeof window === 'undefined') {
-    (0, _socket2.default)(data);
+    (0, _socket2.default)(_extends({
+      kuker: true,
+      time: new Date().getTime(),
+      origin: _socket2.default.origin
+    }, data));
     return;
   }
 
@@ -123,11 +127,13 @@ exports.default = postMessageViaSocket;
 
 var PORT = exports.PORT = 8228;
 var KUKER_EVENT = 'kuker-event';
-var NEW_SESSION_EVENT = {
-  type: 'NEW_SESSION',
-  kuker: true,
-  time: new Date().getTime(),
-  origin: 'node (PORT: ' + PORT + ')'
+var ORIGIN = 'node (PORT: ' + PORT + ')';
+var NEW_SESSION_EVENT = function NEW_SESSION_EVENT() {
+  return {
+    kuker: true,
+    type: 'NEW_SESSION',
+    origin: ORIGIN
+  };
 };
 var connections = {};
 
@@ -156,14 +162,13 @@ var S = {
     this.state = 'setup-in-progress';
 
     // *************************************** socket.io integration
-
     var r = 'require';
-    var socketIO = this[r]('socket.io');
-    var http = this[r]('http');
+    var socketIO = module[r]('socket.io');
+    var http = module[r]('http');
 
     var app = http.createServer(function (req, res) {
       res.writeHead(200);
-      res.end('Add http://localhost:' + PORT + '/socket.io/socket.io.js to your page.');
+      res.end('Hello world');
     });
     var io = socketIO(app);
 
@@ -172,11 +177,11 @@ var S = {
       socket.on('disconnect', function (reason) {
         delete connections[socket.id];
       });
-      socket.emit(KUKER_EVENT, [NEW_SESSION_EVENT].concat(S.messages));
+      socket.emit(KUKER_EVENT, [NEW_SESSION_EVENT()].concat(S.messages));
       // socket.on('received', () => console.log('received'));
     });
 
-    this.log('Kuker Emitter socket server works at ' + PORT + ' port.');
+    // this.log('Kuker Emitter socket server works at ' + PORT + ' port.');
     app.listen(PORT);
 
     // *************************************** socket.io integration
@@ -191,6 +196,7 @@ var S = {
 function postMessageViaSocket(message) {
   S.postMessage(message);
 };
+postMessageViaSocket.origin = ORIGIN;
 
 },{}],6:[function(require,module,exports){
 'use strict';

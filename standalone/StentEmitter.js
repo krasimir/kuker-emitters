@@ -189,7 +189,7 @@ var _socket2 = _interopRequireDefault(_socket);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function getOrigin() {
-  if (typeof location !== 'undefined' && location.protocol && location.host && location.pathname) {
+  if (typeof location !== 'undefined' && location.protocol && location.host) {
     return location.protocol + '//' + location.host;
   }
   return '';
@@ -197,7 +197,11 @@ function getOrigin() {
 
 function message(data) {
   if (typeof window === 'undefined') {
-    (0, _socket2.default)(data);
+    (0, _socket2.default)(_extends({
+      kuker: true,
+      time: new Date().getTime(),
+      origin: _socket2.default.origin
+    }, data));
     return;
   }
 
@@ -255,11 +259,13 @@ exports.default = postMessageViaSocket;
 
 var PORT = exports.PORT = 8228;
 var KUKER_EVENT = 'kuker-event';
-var NEW_SESSION_EVENT = {
-  type: 'NEW_SESSION',
-  kuker: true,
-  time: new Date().getTime(),
-  origin: 'node (PORT: ' + PORT + ')'
+var ORIGIN = 'node (PORT: ' + PORT + ')';
+var NEW_SESSION_EVENT = function NEW_SESSION_EVENT() {
+  return {
+    kuker: true,
+    type: 'NEW_SESSION',
+    origin: ORIGIN
+  };
 };
 var connections = {};
 
@@ -303,7 +309,7 @@ var S = {
       socket.on('disconnect', function (reason) {
         delete connections[socket.id];
       });
-      socket.emit(KUKER_EVENT, [NEW_SESSION_EVENT].concat(S.messages));
+      socket.emit(KUKER_EVENT, [NEW_SESSION_EVENT()].concat(S.messages));
       // socket.on('received', () => console.log('received'));
     });
 
@@ -322,6 +328,7 @@ var S = {
 function postMessageViaSocket(message) {
   S.postMessage(message);
 };
+postMessageViaSocket.origin = ORIGIN;
 },{}],6:[function(require,module,exports){
 'use strict';
 

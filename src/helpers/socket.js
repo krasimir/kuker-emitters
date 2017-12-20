@@ -2,11 +2,13 @@
 
 export const PORT = 8228;
 const KUKER_EVENT = 'kuker-event';
-const NEW_SESSION_EVENT = {
-  type: 'NEW_SESSION',
-  kuker: true,
-  time: (new Date()).getTime(),
-  origin: `node (PORT: ${ PORT })`
+const ORIGIN = `node (PORT: ${ PORT })`;
+const NEW_SESSION_EVENT = function () {
+  return {
+    kuker: true,
+    type: 'NEW_SESSION',
+    origin: ORIGIN
+  };
 };
 const connections = {};
 
@@ -48,7 +50,7 @@ const S = {
       socket.on('disconnect', reason => {
         delete connections[socket.id];
       });
-      socket.emit(KUKER_EVENT, [ NEW_SESSION_EVENT ].concat(S.messages));
+      socket.emit(KUKER_EVENT, [ NEW_SESSION_EVENT() ].concat(S.messages));
       // socket.on('received', () => console.log('received'));
     });
 
@@ -67,3 +69,4 @@ const S = {
 export default function postMessageViaSocket(message) {
   S.postMessage(message);
 };
+postMessageViaSocket.origin = ORIGIN;

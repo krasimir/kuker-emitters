@@ -1,7 +1,7 @@
 import postMessageViaSocket from './socket';
 
 function getOrigin() {
-  if (typeof location !== 'undefined' && location.protocol && location.host && location.pathname) {
+  if (typeof location !== 'undefined' && location.protocol && location.host) {
     return location.protocol + '//' + location.host;
   }
   return '';
@@ -9,7 +9,12 @@ function getOrigin() {
 
 export default function message(data) {
   if (typeof window === 'undefined') {
-    postMessageViaSocket(data);
+    postMessageViaSocket({
+      kuker: true,
+      time: (new Date()).getTime(),
+      origin: postMessageViaSocket.origin,
+      ...data
+    });
     return;
   }
 
