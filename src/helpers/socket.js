@@ -3,35 +3,21 @@
 export const PORT = 8228;
 const KUKER_EVENT = 'kuker-event';
 const ORIGIN = `node (PORT: ${ PORT })`;
-const NEW_SESSION_EVENT = function () {
-  return {
-    kuker: true,
-    type: 'NEW_SESSION',
-    origin: ORIGIN
-  };
-};
 const connections = {};
 
 const S = {
   state: 'setup',
-  messages: [],
   log(what) {
     console.log(what);
   },
   postMessage(message) {
-    var self = this;
-    // console.log(this.state, message);
-
     if (this.state === 'ready') {
       Object.keys(connections).forEach(id => connections[id].emit(KUKER_EVENT, [ message ]));
-      this.messages.push(message);
       return;
     };
     if (this.state === 'setup-in-progress') {
-      this.messages.push(message);
       return;
     }
-    this.messages.push(message);
     this.state = 'setup-in-progress';
 
     // *************************************** socket.io integration
@@ -50,7 +36,6 @@ const S = {
       socket.on('disconnect', reason => {
         delete connections[socket.id];
       });
-      socket.emit(KUKER_EVENT, [ NEW_SESSION_EVENT() ].concat(S.messages));
       // socket.on('received', () => console.log('received'));
     });
 
@@ -60,9 +45,6 @@ const S = {
     // *************************************** socket.io integration
 
     this.state = 'ready';
-    this.messages.forEach(function (message) {
-      self.postMessage(message);
-    });
   }
 };
 
