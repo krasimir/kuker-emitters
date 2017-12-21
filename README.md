@@ -28,7 +28,7 @@ window.postMessage({
 ## BaseEmitter
 
 ```js
-import BaseEmitter from 'kuker-emitters/lib/BaseEmitter';
+import { BaseEmitter } from 'kuker-emitters';
 
 const emit = BaseEmitter();
 
@@ -47,7 +47,7 @@ emit({
 
 ```js
 import { createStore, applyMiddleware } from 'redux';
-import ReduxEmitter from 'kuker-emitters/lib/ReduxEmitter';
+import { ReduxEmitter } from 'kuker-emitters';
 
 const middleware = ReduxEmitter();
 
@@ -60,7 +60,7 @@ const store = createStore(<reducer>, applyMiddleware(middleware));
 
 ```js
 import { createStore, applyMiddleware } from 'redux';
-import ReduxSagaEmitter from 'kuker-emitters/lib/ReduxSagaEmitter';
+import { ReduxSagaEmitter } from 'kuker-emitters';
 import createSagaMiddleware from 'redux-saga';
 
 const emitter = ReduxSagaEmitter();
@@ -81,9 +81,9 @@ sagaMiddleware.run(rootSaga)
 
 ```js
 import { Machine } from 'stent';
-import StentEmitter from 'kuker-emitters/lib/StentEmitter';
+import { StentEmitter } from 'kuker-emitters';
 
-Machine.addMiddleware(StentEmitter);
+Machine.addMiddleware(StentEmitter());
 ```
 
 [Codepen example](https://codepen.io/krasimir/pen/YEjYvR)
@@ -92,7 +92,7 @@ Machine.addMiddleware(StentEmitter);
 
 ```js
 import machina from 'machina';
-import MachinaEmitter from 'kuker-emitters/lib/MachinaEmitter';
+import { MachinaEmitter } from 'kuker-emitters';
 
 const machine = new machina.Fsm({...});
 
