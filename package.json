@@ -1,6 +1,6 @@
 {
   "name": "kuker-emitters",
-  "version": "5.1.5",
+  "version": "6.0.0",
   "description": "Emitters for Kuker Chrome extension",
   "main": "lib",
   "scripts": {
@@ -9,11 +9,14 @@
     "build-redux-saga": "browserify ./lib/ReduxSagaEmitter.js -o ./standalone/ReduxSagaEmitter.js -s ReduxSagaEmitter -u socket.io -u http && uglifyjs ./standalone/ReduxSagaEmitter.js -o ./standalone/ReduxSagaEmitter.min.js",
     "build-base": "browserify ./lib/BaseEmitter.js -o ./standalone/BaseEmitter.js -s BaseEmitter -u socket.io -u http && uglifyjs ./standalone/BaseEmitter.js -o ./standalone/BaseEmitter.min.js",
     "build-machina": "browserify ./lib/MachinaEmitter.js -o ./standalone/MachinaEmitter.js -s MachinaEmitter -u socket.io -u http && uglifyjs ./standalone/MachinaEmitter.js -o ./standalone/MachinaEmitter.min.js",
+
     "build-to-lib": "babel src --out-dir lib",
     "build": "npm run test && npm run build-to-lib && npm run build-stent && npm run build-redux && npm run build-redux-saga && npm run build-base && npm run build-machina",
+
     "test": "./node_modules/.bin/mocha --require babel-register --require babel-polyfill --require test/setup.js --require jsdom-global/register --reporter spec --slow 100 './src/**/**.spec.{js,jsx}'",
     "test:watch": "./node_modules/.bin/mocha --require babel-register --require babel-polyfill --require test/setup.js --require jsdom-global/register --reporter spec --slow 100 --watch --watch-extensions jx,jsx,json './src/**/**.spec.{js,jsx}'",
     "watch": "babel src --out-dir lib -w",
+
     "test:socket-integration": "node ./test/scripts/test.socket.integration.js",
     "test:browserify-integration": "browserify ./test/scripts/browserify.integration.js -o ./test/scripts/browserify.integration.build.js -t babelify"
   },

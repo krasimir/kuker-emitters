@@ -1,11 +1,11 @@
 import sanitize from './helpers/sanitize';
-import message from './helpers/message';
-import guard from './helpers/guard';
+import createMessenger from './helpers/createMessenger';
 
 const NOOP = function () { return function (noop) { return noop; }; };
 
 export default function ReduxEmitter() {
-  if (!guard()) return NOOP;
+  const message = createMessenger();
+
   return function middleware({ getState, dispatch }) {
     return next => action => {
       const result = next(action);

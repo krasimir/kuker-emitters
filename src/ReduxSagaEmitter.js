@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import sanitize from './helpers/sanitize';
-import message from './helpers/message';
-import guard from './helpers/guard';
+import createMessenger from './helpers/createMessenger';
 
 var store = null;
 
@@ -10,15 +9,17 @@ const getState = function () {
   return { '<unknown>': 'You forgot to call `emitter.setStore(<your store>)`. Please check https://github.com/krasimir/kuker-emitters' };
 };
 
-const sendMessage = function (data) {
-  message({
-    state: sanitize(getState()),
-    ...data
-  });
-};
+const NOOP = { sagaMonitor: null, setStore: () => {}};
 
 export default function ReduxSagaEmitter() {
-  if (!guard()) return { sagaMonitor: null, setStore: () => {}};
+  const message = createMessenger();
+  const sendMessage = function (data) {
+    message({
+      state: sanitize(getState()),
+      ...data
+    });
+  };
+
   return {
     sagaMonitor: {
       effectTriggered({ effectId, parentEffectId, label, effect }) {

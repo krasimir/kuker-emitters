@@ -1,19 +1,8 @@
 import sanitize from './helpers/sanitize';
-import message from './helpers/message';
-import guard from './helpers/guard';
+import createMessenger from './helpers/createMessenger';
 
 var Machine;
 
-const postMessage = (data) => {
-  if (window && window.top && window.top.postMessage) {
-    const machines = Object.keys(Machine.machines)
-      .map(name => ({ name, state: sanitize(Machine.machines[name].state) }));
-
-    message({ state: machines, ...data });
-  } else {
-    console.error('There is no window.postMessage available');
-  }
-};
 const formatYielded = yielded => {
   var y = yielded;
 
@@ -38,96 +27,96 @@ const getMetaInfo = meta => {
   });
 };
 
-const StentEmitter = {
-  __sanitize: sanitize,
-  __formatYielded: formatYielded,
-  __message: message,
-  __initialize(m) {
-    Machine = m;
-  },
-  onMachineCreated(machine) {
-    if (!guard()) return;
-    postMessage({
-      type: 'onMachineCreated',
-      machine: sanitize(machine),
-      meta: getMetaInfo()
-    });
-  },
-  onActionDispatched(actionName, ...args) {
-    if (!guard()) return;
-    postMessage({
-      type: 'onActionDispatched',
-      actionName,
-      args: sanitize(args),
-      machine: sanitize(this),
-      meta: getMetaInfo()
-    });
-  },
-  onActionProcessed(actionName, ...args) {
-    if (!guard()) return;
-    postMessage({
-      type: 'onActionProcessed',
-      actionName,
-      args: sanitize(args),
-      machine: sanitize(this),
-      meta: getMetaInfo()
-    });
-  },
-  onStateWillChange() {
-    if (!guard()) return;
-    postMessage({
-      type: 'onStateWillChange',
-      machine: sanitize(this),
-      meta: getMetaInfo()
-    });
-  },
-  onStateChanged() {
-    if (!guard()) return;
-    postMessage({
-      type: 'onStateChanged',
-      machine: sanitize(this),
-      meta: getMetaInfo()
-    });
-  },
-  onGeneratorStep(yielded) {
-    if (!guard()) return;
-    postMessage({
-      type: 'onGeneratorStep',
-      yielded: formatYielded(yielded),
-      meta: getMetaInfo()
-    });
-  },
-  onGeneratorEnd(value) {
-    if (!guard()) return;
-    postMessage({
-      type: 'onGeneratorEnd',
-      value: sanitize(value),
-      meta: getMetaInfo()
-    });
-  },
-  onGeneratorResumed(value) {
-    if (!guard()) return;
-    postMessage({
-      type: 'onGeneratorResumed',
-      value: sanitize(value),
-      meta: getMetaInfo()
-    });
-  },
-  onMachineConnected(machines, meta) {
-    if (!guard()) return;
-    postMessage({
-      type: 'onMachineConnected',
-      meta: getMetaInfo({ ...meta, ...{ machines: sanitize(machines) }})
-    });
-  },
-  onMachineDisconnected(machines, meta) {
-    if (!guard()) return;
-    postMessage({
-      type: 'onMachineDisconnected',
-      meta: getMetaInfo({ ...meta, ...{ machines: sanitize(machines) }})
-    });
-  },
-  onMiddlewareRegister() {}
+const StentEmitter = function () {
+  const message = createMessenger();
+  const postMessage = (data) => {
+    const machines = Object.keys(Machine.machines)
+      .map(name => ({ name, state: sanitize(Machine.machines[name].state) }));
+
+    message({ state: machines, ...data });
+  };
+
+  return {
+    __sanitize: sanitize,
+    __formatYielded: formatYielded,
+    __message: message,
+    __initialize(m) {
+      Machine = m;
+    },
+    onMachineCreated(machine) {
+      postMessage({
+        type: 'onMachineCreated',
+        machine: sanitize(machine),
+        meta: getMetaInfo()
+      });
+    },
+    onActionDispatched(actionName, ...args) {
+      postMessage({
+        type: 'onActionDispatched',
+        actionName,
+        args: sanitize(args),
+        machine: sanitize(this),
+        meta: getMetaInfo()
+      });
+    },
+    onActionProcessed(actionName, ...args) {
+      postMessage({
+        type: 'onActionProcessed',
+        actionName,
+        args: sanitize(args),
+        machine: sanitize(this),
+        meta: getMetaInfo()
+      });
+    },
+    onStateWillChange() {
+      postMessage({
+        type: 'onStateWillChange',
+        machine: sanitize(this),
+        meta: getMetaInfo()
+      });
+    },
+    onStateChanged() {
+      postMessage({
+        type: 'onStateChanged',
+        machine: sanitize(this),
+        meta: getMetaInfo()
+      });
+    },
+    onGeneratorStep(yielded) {
+      postMessage({
+        type: 'onGeneratorStep',
+        yielded: formatYielded(yielded),
+        meta: getMetaInfo()
+      });
+    },
+    onGeneratorEnd(value) {
+      postMessage({
+        type: 'onGeneratorEnd',
+        value: sanitize(value),
+        meta: getMetaInfo()
+      });
+    },
+    onGeneratorResumed(value) {
+      postMessage({
+        type: 'onGeneratorResumed',
+        value: sanitize(value),
+        meta: getMetaInfo()
+      });
+    },
+    onMachineConnected(machines, meta) {
+      postMessage({
+        type: 'onMachineConnected',
+        meta: getMetaInfo({ ...meta, ...{ machines: sanitize(machines) }})
+      });
+    },
+    onMachineDisconnected(machines, meta) {
+      postMessage({
+        type: 'onMachineDisconnected',
+        meta: getMetaInfo({ ...meta, ...{ machines: sanitize(machines) }})
+      });
+    },
+    onMiddlewareRegister() {}
+  };
 };
 
 export default StentEmitter;

@@ -1,9 +1,8 @@
 import sanitize from './helpers/sanitize';
-import message from './helpers/message';
-import guard from './helpers/guard';
+import createMessenger from './helpers/createMessenger';
 
 export default function MachinaEmitter(machine) {
-  if (!guard()) return;
+  const message = createMessenger();
 
   machine.on('*', function (eventName, data) {
     message({

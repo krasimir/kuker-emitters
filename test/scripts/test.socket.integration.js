@@ -1,10 +1,10 @@
 var BaseEmitter = require('../../lib/BaseEmitter');
-var emit = BaseEmitter();
 var http = require('http');
 var PORT = 3333;
 
 var app = http.createServer(function (req, res) {
-  console.log('request');
+  var emit = BaseEmitter();
+
   emit({ kuker: true, type: 'message1' });
   emit({ kuker: true, type: 'message2' });
 

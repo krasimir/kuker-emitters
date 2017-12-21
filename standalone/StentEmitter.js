@@ -9,29 +9,14 @@ var _sanitize = require('./helpers/sanitize');
 
 var _sanitize2 = _interopRequireDefault(_sanitize);
 
-var _message = require('./helpers/message');
+var _createMessenger = require('./helpers/createMessenger');
 
-var _message2 = _interopRequireDefault(_message);
-
-var _guard = require('./helpers/guard');
-
-var _guard2 = _interopRequireDefault(_guard);
+var _createMessenger2 = _interopRequireDefault(_createMessenger);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Machine;
 
-var postMessage = function postMessage(data) {
-  if (window && window.top && window.top.postMessage) {
-    var machines = Object.keys(Machine.machines).map(function (name) {
-      return { name: name, state: (0, _sanitize2.default)(Machine.machines[name].state) };
-    });
-
-    (0, _message2.default)(_extends({ state: machines }, data));
-  } else {
-    console.error('There is no window.postMessage available');
-  }
-};
 var formatYielded = function formatYielded(yielded) {
   var y = yielded;
 
@@ -58,161 +43,211 @@ var getMetaInfo = function getMetaInfo(meta) {
   });
 };
 
-var StentEmitter = {
-  __sanitize: _sanitize2.default,
-  __formatYielded: formatYielded,
-  __message: _message2.default,
-  __initialize: function __initialize(m) {
-    Machine = m;
-  },
-  onMachineCreated: function onMachineCreated(machine) {
-    if (!(0, _guard2.default)()) return;
-    postMessage({
-      type: 'onMachineCreated',
-      machine: (0, _sanitize2.default)(machine),
-      meta: getMetaInfo()
+var StentEmitter = function StentEmitter() {
+  var message = (0, _createMessenger2.default)();
+  var postMessage = function postMessage(data) {
+    var machines = Object.keys(Machine.machines).map(function (name) {
+      return { name: name, state: (0, _sanitize2.default)(Machine.machines[name].state) };
     });
-  },
-  onActionDispatched: function onActionDispatched(actionName) {
-    if (!(0, _guard2.default)()) return;
 
-    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
+    message(_extends({ state: machines }, data));
+  };
 
-    postMessage({
-      type: 'onActionDispatched',
-      actionName: actionName,
-      args: (0, _sanitize2.default)(args),
-      machine: (0, _sanitize2.default)(this),
-      meta: getMetaInfo()
-    });
-  },
-  onActionProcessed: function onActionProcessed(actionName) {
-    if (!(0, _guard2.default)()) return;
+  return {
+    __sanitize: _sanitize2.default,
+    __formatYielded: formatYielded,
+    __message: message,
+    __initialize: function __initialize(m) {
+      Machine = m;
+    },
+    onMachineCreated: function onMachineCreated(machine) {
+      postMessage({
+        type: 'onMachineCreated',
+        machine: (0, _sanitize2.default)(machine),
+        meta: getMetaInfo()
+      });
+    },
+    onActionDispatched: function onActionDispatched(actionName) {
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
 
-    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-      args[_key2 - 1] = arguments[_key2];
-    }
+      postMessage({
+        type: 'onActionDispatched',
+        actionName: actionName,
+        args: (0, _sanitize2.default)(args),
+        machine: (0, _sanitize2.default)(this),
+        meta: getMetaInfo()
+      });
+    },
+    onActionProcessed: function onActionProcessed(actionName) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
 
-    postMessage({
-      type: 'onActionProcessed',
-      actionName: actionName,
-      args: (0, _sanitize2.default)(args),
-      machine: (0, _sanitize2.default)(this),
-      meta: getMetaInfo()
-    });
-  },
-  onStateWillChange: function onStateWillChange() {
-    if (!(0, _guard2.default)()) return;
-    postMessage({
-      type: 'onStateWillChange',
-      machine: (0, _sanitize2.default)(this),
-      meta: getMetaInfo()
-    });
-  },
-  onStateChanged: function onStateChanged() {
-    if (!(0, _guard2.default)()) return;
-    postMessage({
-      type: 'onStateChanged',
-      machine: (0, _sanitize2.default)(this),
-      meta: getMetaInfo()
-    });
-  },
-  onGeneratorStep: function onGeneratorStep(yielded) {
-    if (!(0, _guard2.default)()) return;
-    postMessage({
-      type: 'onGeneratorStep',
-      yielded: formatYielded(yielded),
-      meta: getMetaInfo()
-    });
-  },
-  onGeneratorEnd: function onGeneratorEnd(value) {
-    if (!(0, _guard2.default)()) return;
-    postMessage({
-      type: 'onGeneratorEnd',
-      value: (0, _sanitize2.default)(value),
-      meta: getMetaInfo()
-    });
-  },
-  onGeneratorResumed: function onGeneratorResumed(value) {
-    if (!(0, _guard2.default)()) return;
-    postMessage({
-      type: 'onGeneratorResumed',
-      value: (0, _sanitize2.default)(value),
-      meta: getMetaInfo()
-    });
-  },
-  onMachineConnected: function onMachineConnected(machines, meta) {
-    if (!(0, _guard2.default)()) return;
-    postMessage({
-      type: 'onMachineConnected',
-      meta: getMetaInfo(_extends({}, meta, { machines: (0, _sanitize2.default)(machines) }))
-    });
-  },
-  onMachineDisconnected: function onMachineDisconnected(machines, meta) {
-    if (!(0, _guard2.default)()) return;
-    postMessage({
-      type: 'onMachineDisconnected',
-      meta: getMetaInfo(_extends({}, meta, { machines: (0, _sanitize2.default)(machines) }))
-    });
-  },
-  onMiddlewareRegister: function onMiddlewareRegister() {}
+      postMessage({
+        type: 'onActionProcessed',
+        actionName: actionName,
+        args: (0, _sanitize2.default)(args),
+        machine: (0, _sanitize2.default)(this),
+        meta: getMetaInfo()
+      });
+    },
+    onStateWillChange: function onStateWillChange() {
+      postMessage({
+        type: 'onStateWillChange',
+        machine: (0, _sanitize2.default)(this),
+        meta: getMetaInfo()
+      });
+    },
+    onStateChanged: function onStateChanged() {
+      postMessage({
+        type: 'onStateChanged',
+        machine: (0, _sanitize2.default)(this),
+        meta: getMetaInfo()
+      });
+    },
+    onGeneratorStep: function onGeneratorStep(yielded) {
+      postMessage({
+        type: 'onGeneratorStep',
+        yielded: formatYielded(yielded),
+        meta: getMetaInfo()
+      });
+    },
+    onGeneratorEnd: function onGeneratorEnd(value) {
+      postMessage({
+        type: 'onGeneratorEnd',
+        value: (0, _sanitize2.default)(value),
+        meta: getMetaInfo()
+      });
+    },
+    onGeneratorResumed: function onGeneratorResumed(value) {
+      postMessage({
+        type: 'onGeneratorResumed',
+        value: (0, _sanitize2.default)(value),
+        meta: getMetaInfo()
+      });
+    },
+    onMachineConnected: function onMachineConnected(machines, meta) {
+      postMessage({
+        type: 'onMachineConnected',
+        meta: getMetaInfo(_extends({}, meta, { machines: (0, _sanitize2.default)(machines) }))
+      });
+    },
+    onMachineDisconnected: function onMachineDisconnected(machines, meta) {
+      postMessage({
+        type: 'onMachineDisconnected',
+        meta: getMetaInfo(_extends({}, meta, { machines: (0, _sanitize2.default)(machines) }))
+      });
+    },
+    onMiddlewareRegister: function onMiddlewareRegister() {}
+  };
 };
 
 exports.default = StentEmitter;
 module.exports = exports['default'];
-},{"./helpers/guard":2,"./helpers/message":3,"./helpers/sanitize":4}],2:[function(require,module,exports){
-'use strict';
-
-exports.__esModule = true;
-exports.default = guard;
-var ID = exports.ID = '__kuker__is_here__';
-
-function guard() {
-  return true;
-  // return typeof window !== 'undefined' && window[ID] === true;
-};
-},{}],3:[function(require,module,exports){
+},{"./helpers/createMessenger":2,"./helpers/sanitize":3}],2:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-exports.default = message;
+exports.default = createMessenger;
+/* eslint-disable vars-on-top */
+var PORT = exports.PORT = 8228;
+var KUKER_EVENT = 'kuker-event';
+var NODE_ORIGIN = 'node (PORT: ' + PORT + ')';
 
-var _socket = require('./socket');
-
-var _socket2 = _interopRequireDefault(_socket);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var isDefined = function isDefined(what) {
+  return typeof what !== 'undefined';
+};
 
 function getOrigin() {
-  if (typeof location !== 'undefined' && location.protocol && location.host) {
+  if (isDefined(location) && isDefined(location.protocol) && isDefined(location.host)) {
     return location.protocol + '//' + location.host;
   }
-  return '';
+  return 'unknown';
 }
-
-function message(data) {
-  if (typeof window === 'undefined') {
-    (0, _socket2.default)(_extends({
-      kuker: true,
-      time: new Date().getTime(),
-      origin: _socket2.default.origin
-    }, data));
-    return;
-  }
-
-  window.postMessage(_extends({
+function enhanceEvent(origin, data) {
+  return _extends({
     kuker: true,
     time: new Date().getTime(),
-    origin: getOrigin()
-  }, data), '*');
+    origin: origin
+  }, data);
+}
+
+var messagesBeforeSetup = [];
+var connections = null;
+var app = null;
+var isThereAnySocketServer = function isThereAnySocketServer() {
+  return app !== null;
 };
-module.exports = exports['default'];
-},{"./socket":5}],4:[function(require,module,exports){
+var isTheServerReady = false;
+
+var socketPostMessage = function socketPostMessage(data) {
+  if (isThereAnySocketServer() && connections !== null) {
+    Object.keys(connections).forEach(function (id) {
+      return connections[id].emit(KUKER_EVENT, [enhanceEvent(NODE_ORIGIN, data)]);
+    });
+  } else {
+    messagesBeforeSetup.push(data);
+  }
+};
+var browserPostMessage = function browserPostMessage(data) {
+  window.postMessage(enhanceEvent(getOrigin(), data), '*');
+};
+
+function createMessenger() {
+
+  // in node
+  if (typeof window === 'undefined') {
+    if (isThereAnySocketServer()) {
+      socketPostMessage({ type: 'NEW_SESSION' });
+    } else {
+      if (isTheServerReady) {
+        return socketPostMessage;
+      }
+      var r = 'require';
+      var socketIO = module[r]('socket.io');
+      var http = module[r]('http');
+
+      app = http.createServer(function (req, res) {
+        res.writeHead(200);
+        res.end('Kuker: Hi!');
+      });
+      var io = socketIO(app);
+
+      io.on('connection', function (socket) {
+        if (connections === null) connections = {};
+        connections[socket.id] = socket;
+        socket.on('disconnect', function (reason) {
+          delete connections[socket.id];
+        });
+        // the very first client receives the pending messages
+        // for the rest ... sorry :)
+        if (messagesBeforeSetup.length > 0) {
+          socketPostMessage({ type: 'NEW_SESSION' });
+          messagesBeforeSetup.forEach(function (data) {
+            return socketPostMessage(data);
+          });
+          messagesBeforeSetup = [];
+        }
+        console.log('Kuker(Messenger): client connected (' + Object.keys(connections).length + ' in total)');
+      });
+
+      app.listen(PORT);
+      isTheServerReady = true;
+      console.log('Kuker(Messenger): server running at ' + PORT);
+    }
+
+    return socketPostMessage;
+  }
+
+  // in the browser
+  return browserPostMessage;
+};
+},{}],3:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -250,68 +285,7 @@ function sanitize(something) {
   return result;
 }
 module.exports = exports['default'];
-},{"./vendors/CircularJSON":6,"./vendors/SerializeError":7}],5:[function(require,module,exports){
-'use strict';
-
-exports.__esModule = true;
-exports.default = postMessageViaSocket;
-/* eslint-disable no-use-before-define */
-
-var PORT = exports.PORT = 8228;
-var KUKER_EVENT = 'kuker-event';
-var ORIGIN = 'node (PORT: ' + PORT + ')';
-var connections = {};
-
-var S = {
-  state: 'setup',
-  log: function log(what) {
-    console.log(what);
-  },
-  postMessage: function postMessage(message) {
-    if (this.state === 'ready') {
-      Object.keys(connections).forEach(function (id) {
-        return connections[id].emit(KUKER_EVENT, [message]);
-      });
-      return;
-    };
-    if (this.state === 'setup-in-progress') {
-      return;
-    }
-    this.state = 'setup-in-progress';
-
-    // *************************************** socket.io integration
-    var r = 'require';
-    var socketIO = module[r]('socket.io');
-    var http = module[r]('http');
-
-    var app = http.createServer(function (req, res) {
-      res.writeHead(200);
-      res.end('Hello world');
-    });
-    var io = socketIO(app);
-
-    io.on('connection', function (socket) {
-      connections[socket.id] = socket;
-      socket.on('disconnect', function (reason) {
-        delete connections[socket.id];
-      });
-      // socket.on('received', () => console.log('received'));
-    });
-
-    // this.log('Kuker Emitter socket server works at ' + PORT + ' port.');
-    app.listen(PORT);
-
-    // *************************************** socket.io integration
-
-    this.state = 'ready';
-  }
-};
-
-function postMessageViaSocket(message) {
-  S.postMessage(message);
-};
-postMessageViaSocket.origin = ORIGIN;
-},{}],6:[function(require,module,exports){
+},{"./vendors/CircularJSON":4,"./vendors/SerializeError":5}],4:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -488,7 +462,7 @@ exports.default = {
   parse: parseRecursion
 };
 module.exports = exports['default'];
-},{}],7:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 // Credits: https://github.com/sindresorhus/serialize-error
 
 'use strict';

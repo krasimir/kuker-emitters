@@ -1,6 +1,5 @@
 import machina from 'machina';
-import { ID } from '../helpers/guard';
-import MachinaEmitter from '../MachinaEmitter';
+import { MachinaEmitter } from '../';
 
 const GREEN = 'GREEN';
 const YELLOW = 'YELLOW';
@@ -71,12 +70,6 @@ const MachineConfiguration = {
 };
 
 describe('Given the MachinaEmitter', function () {
-  before(() => {
-    window[ID] = true;
-  });
-  after(() => {
-    window[ID] = false;
-  });
   beforeEach(() => {
     sinon.stub(window.top, 'postMessage');
   });

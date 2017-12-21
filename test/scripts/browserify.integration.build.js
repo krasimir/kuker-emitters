@@ -8,78 +8,100 @@ var _sanitize = require('./helpers/sanitize');
 
 var _sanitize2 = _interopRequireDefault(_sanitize);
 
-var _message = require('./helpers/message');
+var _createMessenger = require('./helpers/createMessenger');
 
-var _message2 = _interopRequireDefault(_message);
-
-var _guard = require('./helpers/guard');
-
-var _guard2 = _interopRequireDefault(_guard);
+var _createMessenger2 = _interopRequireDefault(_createMessenger);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var NOOP = function NOOP() {};
-
 function BaseEmitter() {
-  return (0, _guard2.default)() ? function (data) {
-    return (0, _message2.default)((0, _sanitize2.default)(data));
-  } : NOOP;
+  var message = (0, _createMessenger2.default)();
+
+  return function (data) {
+    return message((0, _sanitize2.default)(data));
+  };
 };
 module.exports = exports['default'];
 
-},{"./helpers/guard":2,"./helpers/message":3,"./helpers/sanitize":4}],2:[function(require,module,exports){
-'use strict';
-
-exports.__esModule = true;
-exports.default = guard;
-var ID = exports.ID = '__kuker__is_here__';
-
-function guard() {
-  return true;
-  // return typeof window !== 'undefined' && window[ID] === true;
-};
-
-},{}],3:[function(require,module,exports){
+},{"./helpers/createMessenger":2,"./helpers/sanitize":3}],2:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-exports.default = message;
-
-var _socket = require('./socket');
-
-var _socket2 = _interopRequireDefault(_socket);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+exports.default = createMessenger;
+var PORT = exports.PORT = 8228;
+var KUKER_EVENT = 'kuker-event';
+var NODE_ORIGIN = 'node (PORT: ' + PORT + ')';
 
 function getOrigin() {
-  if (typeof location !== 'undefined' && location.protocol && location.host && location.pathname) {
+  if (typeof location !== 'undefined' && location.protocol && location.host) {
     return location.protocol + '//' + location.host;
   }
   return '';
 }
-
-function message(data) {
-  if (typeof window === 'undefined') {
-    (0, _socket2.default)(_extends({
-      kuker: true,
-      time: new Date().getTime(),
-      origin: _socket2.default.origin
-    }, data));
-    return;
-  }
-
-  window.postMessage(_extends({
+function enhanceEvent(origin, data) {
+  return _extends({
     kuker: true,
     time: new Date().getTime(),
-    origin: getOrigin()
-  }, data), '*');
-};
-module.exports = exports['default'];
+    origin: origin
+  }, data);
+}
 
-},{"./socket":5}],4:[function(require,module,exports){
+var app = null;
+var isThereAnySocketServer = function isThereAnySocketServer() {
+  return app !== null;
+};
+
+function createMessenger() {
+
+  // in node
+  if (typeof window === 'undefined') {
+    var messages = [];
+    var connections = {};
+
+    if (!isThereAnySocketServer()) {
+      var r = 'require';
+      var socketIO = module[r]('socket.io');
+      var http = module[r]('http');
+
+      app = http.createServer(function (req, res) {
+        res.writeHead(200);
+        res.end('Kuker: Hi!');
+      });
+      var io = socketIO(app);
+
+      io.on('connection', function (socket) {
+        connections[socket.id] = socket;
+        socket.on('disconnect', function (reason) {
+          delete connections[socket.id];
+        });
+        socket.emit(KUKER_EVENT, [enhanceEvent(NODE_ORIGIN, { type: 'NEW_SESSION' })].concat(messages));
+      });
+
+      // this.log('Kuker Emitter socket server works at ' + PORT + ' port.');
+      app.listen(PORT);
+    }
+
+    return function (data) {
+      if (isThereAnySocketServer()) {
+        Object.keys(connections).forEach(function (id) {
+          return connections[id].emit(KUKER_EVENT, [enhanceEvent(NODE_ORIGIN, data)]);
+        });
+      } else {
+        messages.push(enhanceEvent(NODE_ORIGIN, data));
+      }
+    };
+  }
+
+  // in the browser
+  return function (data) {
+    window.postMessage(enhanceEvent(getOrigin(), data));
+  };
+};
+
+},{}],3:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -118,87 +140,7 @@ function sanitize(something) {
 }
 module.exports = exports['default'];
 
-},{"./vendors/CircularJSON":6,"./vendors/SerializeError":7}],5:[function(require,module,exports){
-'use strict';
-
-exports.__esModule = true;
-exports.default = postMessageViaSocket;
-/* eslint-disable no-use-before-define */
-
-var PORT = exports.PORT = 8228;
-var KUKER_EVENT = 'kuker-event';
-var ORIGIN = 'node (PORT: ' + PORT + ')';
-var NEW_SESSION_EVENT = function NEW_SESSION_EVENT() {
-  return {
-    kuker: true,
-    type: 'NEW_SESSION',
-    origin: ORIGIN
-  };
-};
-var connections = {};
-
-var S = {
-  state: 'setup',
-  messages: [],
-  log: function log(what) {
-    console.log(what);
-  },
-  postMessage: function postMessage(message) {
-    var self = this;
-    // console.log(this.state, message);
-
-    if (this.state === 'ready') {
-      Object.keys(connections).forEach(function (id) {
-        return connections[id].emit(KUKER_EVENT, [message]);
-      });
-      this.messages.push(message);
-      return;
-    };
-    if (this.state === 'setup-in-progress') {
-      this.messages.push(message);
-      return;
-    }
-    this.messages.push(message);
-    this.state = 'setup-in-progress';
-
-    // *************************************** socket.io integration
-    var r = 'require';
-    var socketIO = module[r]('socket.io');
-    var http = module[r]('http');
-
-    var app = http.createServer(function (req, res) {
-      res.writeHead(200);
-      res.end('Hello world');
-    });
-    var io = socketIO(app);
-
-    io.on('connection', function (socket) {
-      connections[socket.id] = socket;
-      socket.on('disconnect', function (reason) {
-        delete connections[socket.id];
-      });
-      socket.emit(KUKER_EVENT, [NEW_SESSION_EVENT()].concat(S.messages));
-      // socket.on('received', () => console.log('received'));
-    });
-
-    // this.log('Kuker Emitter socket server works at ' + PORT + ' port.');
-    app.listen(PORT);
-
-    // *************************************** socket.io integration
-
-    this.state = 'ready';
-    this.messages.forEach(function (message) {
-      self.postMessage(message);
-    });
-  }
-};
-
-function postMessageViaSocket(message) {
-  S.postMessage(message);
-};
-postMessageViaSocket.origin = ORIGIN;
-
-},{}],6:[function(require,module,exports){
+},{"./vendors/CircularJSON":4,"./vendors/SerializeError":5}],4:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -376,7 +318,7 @@ exports.default = {
 };
 module.exports = exports['default'];
 
-},{}],7:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 // Credits: https://github.com/sindresorhus/serialize-error
 
 'use strict';
@@ -452,7 +394,7 @@ function destroyCircular(from, seen) {
 	return to;
 }
 
-},{}],8:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var _BaseEmitter = require('../../src/BaseEmitter');
@@ -463,6 +405,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var emit = (0, _BaseEmitter2.default)();
 
-emit({ type: 'bla', kuker: true });
+emit({ type: 'bla' });
 
-},{"../../src/BaseEmitter":1}]},{},[8]);
+},{"../../src/BaseEmitter":1}]},{},[6]);

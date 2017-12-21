@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars, no-undef */
-import BaseEmitter from '../BaseEmitter';
-import { ID } from '../helpers/guard';
+import { BaseEmitter } from '../';
 
 const initialState = {
   a: {
@@ -24,12 +23,6 @@ const counter = (state = initialState, action) => {
 };
 
 describe('Given the BaseEmitter', function () {
-  before(() => {
-    window[ID] = true;
-  });
-  after(() => {
-    window[ID] = false;
-  });
   beforeEach(() => {
     sinon.stub(window.top, 'postMessage');
   });
@@ -52,10 +45,10 @@ describe('Given the BaseEmitter', function () {
       });
 
       expect(window.top.postMessage).to.be.calledWith({
+        kuker: true,
         state: { a: ['b', 'c'], someFunc: { __func: 'AAA' }, someGene: { __func: 'BBB' } },
         time: sinon.match.number,
         origin: sinon.match.string,
-        kuker: true,
         title: 'aaaa',
         type: 'foo'
       }, '*');

@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars, no-undef */
 import { createStore, applyMiddleware } from 'redux';
-import ReduxEmitter from '../ReduxEmitter';
-import { ID } from '../helpers/guard';
+import { ReduxEmitter } from '../';
 
 const initialState = {
   a: {
@@ -25,12 +24,6 @@ const counter = (state = initialState, action) => {
 };
 
 describe('Given the ReduxEmitter', function () {
-  before(() => {
-    window[ID] = true;
-  });
-  after(() => {
-    window[ID] = false;
-  });
   beforeEach(() => {
     sinon.stub(window.top, 'postMessage');
   });
