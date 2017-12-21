@@ -1,6 +1,13 @@
 # Emitters for Kuker
 
-![kuker](./img/kuker_banner.jpg)
+Integrate [Kuker](https://github.com/krasimir/kuker) with:
+
+* [Redux](#integration-with-redux)
+* [redux-saga](#integration-with-redux-saga)
+* [Stent](#integration-with-stent)
+* [Machina.js](#integration-with-machinajs)
+
+![kuker](./img/kuker_banner.jpg) 
 
 Pluggable modules that send events to [Kuker](https://github.com/krasimir/kuker). These emitters are framework specific and provide nicely formatted output. If you want to send a message manually you are free do it by calling:
 
