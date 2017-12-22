@@ -69,7 +69,7 @@ describe('Given the ReduxSagaEmitter', function () {
           },
           {
             desc: 'should send effectResolved event',
-            finder: (m, i) => i === 2,
+            finder: (m, i) => i === 3,
             expected: {
               type: '@saga_effectResolved'
             },
@@ -78,7 +78,7 @@ describe('Given the ReduxSagaEmitter', function () {
           },
           {
             desc: 'should send actionDispatched event',
-            finder: (m, i) => i === 3,
+            finder: (m, i) => i === 4,
             expected: {
               type: '@saga_actionDispatched'
             },
@@ -87,7 +87,7 @@ describe('Given the ReduxSagaEmitter', function () {
           },
           {
             desc: 'should send effectRejected event',
-            finder: (m, i) => i === 4,
+            finder: (m, i) => i === 5,
             expected: {
               type: '@saga_effectRejected'
             },
@@ -96,7 +96,7 @@ describe('Given the ReduxSagaEmitter', function () {
           },
           {
             desc: 'should send effectCancelled event',
-            finder: (m, i) => i === 4,
+            finder: (m, i) => i === 5,
             expected: {
               type: '@saga_effectCancelled'
             },

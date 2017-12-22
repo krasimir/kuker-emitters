@@ -2,7 +2,7 @@ import sanitize from './helpers/sanitize';
 import createMessenger from './helpers/createMessenger';
 
 export default function MachinaEmitter(machine) {
-  const message = createMessenger();
+  const message = createMessenger('MachinaEmitter');
 
   machine.on('*', function (eventName, data) {
     message({

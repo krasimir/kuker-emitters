@@ -39,12 +39,12 @@ const browserPostMessage = function (data) {
   window.postMessage(enhanceEvent(getOrigin(), data), '*');
 };
 
-export default function createMessenger() {
+export default function createMessenger(emitterName) {
 
   // in node
   if (typeof window === 'undefined') {
     if (isThereAnySocketServer()) {
-      socketPostMessage({ type: 'NEW_SESSION' });
+      socketPostMessage({ type: 'NEW_EMITTER', emitterName });
     } else {
       if (isTheServerReady) {
         return socketPostMessage;
@@ -68,7 +68,7 @@ export default function createMessenger() {
         // the very first client receives the pending messages
         // for the rest ... sorry :)
         if (messagesBeforeSetup.length > 0) {
-          socketPostMessage({ type: 'NEW_SESSION' });
+          socketPostMessage({ type: 'NEW_EMITTER', emitterName });
           messagesBeforeSetup.forEach(data => socketPostMessage(data));
           messagesBeforeSetup = [];
         }
@@ -84,5 +84,6 @@ export default function createMessenger() {
   }
 
   // in the browser
+  browserPostMessage({ type: 'NEW_EMITTER', emitterName });
   return browserPostMessage;
 };
