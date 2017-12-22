@@ -6,6 +6,7 @@ Integrate [Kuker](https://github.com/krasimir/kuker) with:
 * [redux-saga](#integration-with-redux-saga)
 * [Stent](#integration-with-stent)
 * [Machina.js](#integration-with-machinajs)
+* [MobX](#integration-with-mobx)
 
 ![kuker](./img/kuker_banner.jpg) 
 
@@ -107,3 +108,23 @@ MachinaEmitter(machine);
 ```
 
 [Codepen example](https://codepen.io/krasimir/pen/aEOpvE)
+
+## Integration with [MobX](https://mobx.js.org/)
+
+```js
+import { MobXEmitter } from 'kuker-emitters';
+import { spy, observable, action } from 'mobx';
+
+class Person {
+  @observable age = 33;
+  @action newYear() {
+    this.age += 1;
+  }
+}
+
+const person = new Person();
+
+MobXEmitter(spy, [ person ]);
+```
+
+[Codepen example](https://codepen.io/krasimir/pen/LeRqRg)
