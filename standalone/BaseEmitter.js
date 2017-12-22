@@ -15,7 +15,7 @@ var _createMessenger2 = _interopRequireDefault(_createMessenger);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function BaseEmitter() {
-  var message = (0, _createMessenger2.default)();
+  var message = (0, _createMessenger2.default)('BaseEmitter');
 
   return function (data) {
     return message((0, _sanitize2.default)(data));
@@ -74,12 +74,12 @@ var browserPostMessage = function browserPostMessage(data) {
   window.postMessage(enhanceEvent(getOrigin(), data), '*');
 };
 
-function createMessenger() {
+function createMessenger(emitterName) {
 
   // in node
   if (typeof window === 'undefined') {
     if (isThereAnySocketServer()) {
-      socketPostMessage({ type: 'NEW_SESSION' });
+      socketPostMessage({ type: 'NEW_EMITTER', emitterName: emitterName });
     } else {
       if (isTheServerReady) {
         return socketPostMessage;
@@ -103,7 +103,7 @@ function createMessenger() {
         // the very first client receives the pending messages
         // for the rest ... sorry :)
         if (messagesBeforeSetup.length > 0) {
-          socketPostMessage({ type: 'NEW_SESSION' });
+          socketPostMessage({ type: 'NEW_EMITTER', emitterName: emitterName });
           messagesBeforeSetup.forEach(function (data) {
             return socketPostMessage(data);
           });
@@ -121,6 +121,7 @@ function createMessenger() {
   }
 
   // in the browser
+  browserPostMessage({ type: 'NEW_EMITTER', emitterName: emitterName });
   return browserPostMessage;
 };
 },{}],3:[function(require,module,exports){
