@@ -1,6 +1,6 @@
 {
   "name": "kuker-emitters",
-  "version": "6.1.1",
+  "version": "6.2.0",
   "description": "Emitters for Kuker Chrome extension",
   "main": "lib",
   "scripts": {
@@ -10,8 +10,9 @@
     "build-base": "browserify ./lib/BaseEmitter.js -o ./standalone/BaseEmitter.js -s BaseEmitter -u socket.io -u http && uglifyjs ./standalone/BaseEmitter.js -o ./standalone/BaseEmitter.min.js",
     "build-machina": "browserify ./lib/MachinaEmitter.js -o ./standalone/MachinaEmitter.js -s MachinaEmitter -u socket.io -u http && uglifyjs ./standalone/MachinaEmitter.js -o ./standalone/MachinaEmitter.min.js",
     "build-mobx": "browserify ./lib/MobXEmitter.js -o ./standalone/MobXEmitter.js -s MobXEmitter -u socket.io -u http && uglifyjs ./standalone/MobXEmitter.js -o ./standalone/MobXEmitter.min.js",
+    "build-react": "browserify ./lib/ReactEmitter.js -o ./standalone/ReactEmitter.js -s ReactEmitter -u socket.io -u http && uglifyjs ./standalone/ReactEmitter.js -o ./standalone/ReactEmitter.min.js",
     "build-to-lib": "babel src --out-dir lib",
-    "build": "npm run test && npm run build-to-lib && npm run build-stent && npm run build-redux && npm run build-redux-saga && npm run build-base && npm run build-machina && npm run build-mobx",
+    "build": "npm run test && npm run build-to-lib && npm run build-stent && npm run build-redux && npm run build-redux-saga && npm run build-base && npm run build-machina && npm run build-mobx && npm run build-react",
     "test": "./node_modules/.bin/mocha --require babel-register --require babel-polyfill --require test/setup.js --require jsdom-global/register --reporter spec --slow 100 './src/**/**.spec.{js,jsx}'",
     "test:watch": "./node_modules/.bin/mocha --require babel-register --require babel-polyfill --require test/setup.js --require jsdom-global/register --reporter spec --slow 100 --watch --watch-extensions jx,jsx,json './src/**/**.spec.{js,jsx}'",
     "watch": "babel src --out-dir lib -w",
