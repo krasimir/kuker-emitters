@@ -9,8 +9,9 @@ var tries = 5;
 const getTag = function ({ name, props }) {
   return `<${ name }>`;
 };
+
 const Node = function (data) {
-  const { children, ...otherProps } = data.props;
+  const { children, ...otherProps } = data.props || {};
 
   return {
     name: data.name,
@@ -19,6 +20,7 @@ const Node = function (data) {
     children: []
   };
 };
+
 const traverseReactTree = function (root, renderer, { getData, getData012, getDataFiber, getDisplayName }) {
   if (!root) return {};
 
@@ -37,6 +39,7 @@ const traverseReactTree = function (root, renderer, { getData, getData012, getDa
 
   return walkNode(root);
 };
+
 const throttle = function (func, wait, options) {
   var context, args, result;
   var timeout = null;
@@ -107,21 +110,26 @@ export default function ReactEmitter() {
 
     hook.on('renderer-attached', function (attached) {
       const { helpers, renderer } = attached;
+      var rootNode = null;
 
-      helpers.walkTree(function (item, data) {
-        // console.log(data);
-      }, function (root) {
-        const rootData = hook.__helpers.getData(root);
+      (function findRootNode() {
+        helpers.walkTree(() => {}, function (root) {
+          const rootData = hook.__helpers.getData(root);
 
-        if (rootData.name === 'TopLevelWrapper' && rootData.children && rootData.children.length === 1) {
-          root = rootData.children[0];
-        }
-        getState = () => sanitize(traverseReactTree(root, renderer, hook.__helpers));
-        postMessage({
-          type: '@@react_root_detected',
-          state: getState()
+          rootNode = root;
+          if (rootData.name === 'TopLevelWrapper' && rootData.children && rootData.children.length === 1) {
+            root = rootData.children[0];
+          }
+          getState = () => sanitize(traverseReactTree(root, renderer, hook.__helpers));
+          postMessage({
+            type: '@@react_root_detected',
+            state: getState()
+          });
         });
-      });
+        if (rootNode === null) {
+          setTimeout(findRootNode, 300);
+        }
+      })();
     });
     hook.on('root', throttle(({ calls, components }) => {
       postMessage({
