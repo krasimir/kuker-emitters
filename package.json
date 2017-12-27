@@ -1,6 +1,6 @@
 {
   "name": "kuker-emitters",
-  "version": "6.2.2",
+  "version": "6.2.3",
   "description": "Emitters for Kuker Chrome extension",
   "main": "lib",
   "scripts": {
