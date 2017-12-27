@@ -6,11 +6,8 @@ import sanitize from './helpers/sanitize';
 
 var tries = 5;
 
-const getTag = function ({ name, props }) {
-  return `<${ name }>`;
-};
-
-const Node = function (data) {
+export const Node = function (data = {}) {
+  // eslint-disable-next-line
   const { children, ...otherProps } = data.props || {};
 
   return {
@@ -21,7 +18,7 @@ const Node = function (data) {
   };
 };
 
-const traverseReactTree = function (root, renderer, { getData, getData012, getDataFiber, getDisplayName }) {
+export const traverseReactTree = function (root, renderer, { getData, getData012, getDataFiber, getDisplayName }) {
   if (!root) return {};
 
   const isPre013 = !renderer.Reconciler;
@@ -32,15 +29,13 @@ const traverseReactTree = function (root, renderer, { getData, getData012, getDa
     if (data.children && Array.isArray(data.children)) {
       item.children = data.children.map(child => walkNode(child));
     }
-    return {
-      [getTag(data)]: item
-    };
+    return item;
   };
 
   return walkNode(root);
 };
 
-const throttle = function (func, wait, options) {
+export const throttle = function (func, wait, options) {
   var context, args, result;
   var timeout = null;
   var previous = 0;
@@ -69,6 +64,7 @@ const throttle = function (func, wait, options) {
     processThrottledCall(...arguments);
     if (!previous && options.leading === false) previous = now;
 
+    // eslint-disable-next-line
     var remaining = wait - (now - previous);
 
     context = this;
@@ -98,13 +94,13 @@ const connect = function (callback) {
     tries -= 1;
     setTimeout(() => connect(callback), 1500);
   }
-}
+};
 
 export default function ReactEmitter() {
   if (typeof window === 'undefined') return;
 
   const postMessage = createMessenger('ReactEmitter');
-  
+
   connect(hook => {
     var getState = () => ({});
 
@@ -153,7 +149,7 @@ export default function ReactEmitter() {
         state: getState(),
         calls,
         components
-      });    
+      });
     }), 100);
     hook.on('unmount', throttle(({ calls, components }) => {
       postMessage({
