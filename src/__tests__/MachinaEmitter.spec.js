@@ -93,7 +93,8 @@ describe('Given the MachinaEmitter', function () {
           time: sinon.match.number,
           type: 'Machina_handling',
           origin: sinon.match.string,
-          kuker: true
+          kuker: true,
+          emitter: 'MachinaEmitter'
         },
         {
           data: {
@@ -109,7 +110,8 @@ describe('Given the MachinaEmitter', function () {
           time: sinon.match.number,
           type: 'Machina_deferred',
           origin: sinon.match.string,
-          kuker: true
+          kuker: true,
+          emitter: 'MachinaEmitter'
         },
         {
           data: {
@@ -123,7 +125,8 @@ describe('Given the MachinaEmitter', function () {
           time: sinon.match.number,
           type: 'Machina_transition',
           origin: sinon.match.string,
-          kuker: true
+          kuker: true,
+          emitter: 'MachinaEmitter'
         },
         {
           data: { status: 'GREEN' },
@@ -132,7 +135,8 @@ describe('Given the MachinaEmitter', function () {
           time: sinon.match.number,
           type: 'Machina_vehicles',
           origin: sinon.match.string,
-          kuker: true
+          kuker: true,
+          emitter: 'MachinaEmitter'
         },
         {
           data: {
@@ -146,7 +150,8 @@ describe('Given the MachinaEmitter', function () {
           time: sinon.match.number,
           type: 'Machina_transitioned',
           origin: sinon.match.string,
-          kuker: true
+          kuker: true,
+          emitter: 'MachinaEmitter'
         },
         {
           data: { delegated: false, inputType: 'pedestrianWaiting', namespace: 'vehicle-signal' },
@@ -155,7 +160,8 @@ describe('Given the MachinaEmitter', function () {
           time: sinon.match.number,
           type: 'Machina_handling',
           origin: sinon.match.string,
-          kuker: true
+          kuker: true,
+          emitter: 'MachinaEmitter'
         },
         {
           data: { delegated: false, inputType: 'pedestrianWaiting', namespace: 'vehicle-signal' },
@@ -164,7 +170,8 @@ describe('Given the MachinaEmitter', function () {
           time: sinon.match.number,
           type: 'Machina_handled',
           origin: sinon.match.string,
-          kuker: true
+          kuker: true,
+          emitter: 'MachinaEmitter'
         }
       ].forEach(expectation => {
         expect(window.top.postMessage).to.be.calledWith(expectation, '*');

@@ -11,14 +11,6 @@ function getOrigin() {
   }
   return 'unknown';
 }
-function enhanceEvent(origin, data) {
-  return {
-    kuker: true,
-    time: (new Date()).getTime(),
-    origin,
-    ...data
-  };
-}
 
 var messagesBeforeSetup = [];
 var connections = null;
@@ -26,25 +18,34 @@ var app = null;
 var isThereAnySocketServer = () => app !== null;
 var isTheServerReady = false;
 
-const socketPostMessage = function (data) {
-  if (isThereAnySocketServer() && connections !== null) {
-    Object.keys(connections).forEach(
-      id => connections[id].emit(KUKER_EVENT, [ enhanceEvent(NODE_ORIGIN, data) ])
-    );
-  } else {
-    messagesBeforeSetup.push(data);
-  }
-};
-const browserPostMessage = function (data) {
-  window.postMessage(enhanceEvent(getOrigin(), data), '*');
-};
+export default function createMessenger(emitterName, emitterDescription = '') {
 
-export default function createMessenger(emitterName) {
+  function enhanceEvent(origin, data) {
+    return {
+      kuker: true,
+      time: (new Date()).getTime(),
+      origin,
+      emitter: emitterName,
+      ...data
+    };
+  }
+  const socketPostMessage = function (data) {
+    if (isThereAnySocketServer() && connections !== null) {
+      Object.keys(connections).forEach(
+        id => connections[id].emit(KUKER_EVENT, [ enhanceEvent(NODE_ORIGIN, data) ])
+      );
+    } else {
+      messagesBeforeSetup.push(data);
+    }
+  };
+  const browserPostMessage = function (data) {
+    window.postMessage(enhanceEvent(getOrigin(), data), '*');
+  };
 
   // in node
   if (typeof window === 'undefined') {
     if (isThereAnySocketServer()) {
-      socketPostMessage({ type: 'NEW_EMITTER', emitterName });
+      socketPostMessage({ type: 'NEW_EMITTER', emitterDescription });
     } else {
       if (isTheServerReady) {
         return socketPostMessage;
@@ -68,7 +69,7 @@ export default function createMessenger(emitterName) {
         // the very first client receives the pending messages
         // for the rest ... sorry :)
         if (messagesBeforeSetup.length > 0) {
-          socketPostMessage({ type: 'NEW_EMITTER', emitterName });
+          socketPostMessage({ type: 'NEW_EMITTER', emitterDescription });
           messagesBeforeSetup.forEach(data => socketPostMessage(data));
           messagesBeforeSetup = [];
         }
@@ -84,6 +85,6 @@ export default function createMessenger(emitterName) {
   }
 
   // in the browser
-  browserPostMessage({ type: 'NEW_EMITTER', emitterName });
+  browserPostMessage({ type: 'NEW_EMITTER', emitterDescription });
   return browserPostMessage;
 };

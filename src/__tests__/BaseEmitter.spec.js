@@ -50,7 +50,8 @@ describe('Given the BaseEmitter', function () {
         time: sinon.match.number,
         origin: sinon.match.string,
         title: 'aaaa',
-        type: 'foo'
+        type: 'foo',
+        emitter: 'BaseEmitter'
       }, '*');
     });
   });

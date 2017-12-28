@@ -12,7 +12,7 @@ const getState = function () {
 const NOOP = { sagaMonitor: null, setStore: () => {}};
 
 export default function ReduxSagaEmitter() {
-  const message = createMessenger('ReduxSagaEmitter');
+  const message = createMessenger('ReduxEmitter', 'Redux-Saga library');
   const sendMessage = function (data) {
     message({
       state: sanitize(getState()),

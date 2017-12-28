@@ -21,7 +21,7 @@ var NOOP = function NOOP() {
 };
 
 function ReduxEmitter() {
-  var message = (0, _createMessenger2.default)('ReduxEmitter');
+  var message = (0, _createMessenger2.default)('ReduxEmitter', 'Redux library');
 
   return function middleware(_ref) {
     var getState = _ref.getState,
@@ -65,13 +65,6 @@ function getOrigin() {
   }
   return 'unknown';
 }
-function enhanceEvent(origin, data) {
-  return _extends({
-    kuker: true,
-    time: new Date().getTime(),
-    origin: origin
-  }, data);
-}
 
 var messagesBeforeSetup = [];
 var connections = null;
@@ -81,25 +74,35 @@ var isThereAnySocketServer = function isThereAnySocketServer() {
 };
 var isTheServerReady = false;
 
-var socketPostMessage = function socketPostMessage(data) {
-  if (isThereAnySocketServer() && connections !== null) {
-    Object.keys(connections).forEach(function (id) {
-      return connections[id].emit(KUKER_EVENT, [enhanceEvent(NODE_ORIGIN, data)]);
-    });
-  } else {
-    messagesBeforeSetup.push(data);
-  }
-};
-var browserPostMessage = function browserPostMessage(data) {
-  window.postMessage(enhanceEvent(getOrigin(), data), '*');
-};
-
 function createMessenger(emitterName) {
+  var emitterDescription = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+
+  function enhanceEvent(origin, data) {
+    return _extends({
+      kuker: true,
+      time: new Date().getTime(),
+      origin: origin,
+      emitter: emitterName
+    }, data);
+  }
+  var socketPostMessage = function socketPostMessage(data) {
+    if (isThereAnySocketServer() && connections !== null) {
+      Object.keys(connections).forEach(function (id) {
+        return connections[id].emit(KUKER_EVENT, [enhanceEvent(NODE_ORIGIN, data)]);
+      });
+    } else {
+      messagesBeforeSetup.push(data);
+    }
+  };
+  var browserPostMessage = function browserPostMessage(data) {
+    window.postMessage(enhanceEvent(getOrigin(), data), '*');
+  };
 
   // in node
   if (typeof window === 'undefined') {
     if (isThereAnySocketServer()) {
-      socketPostMessage({ type: 'NEW_EMITTER', emitterName: emitterName });
+      socketPostMessage({ type: 'NEW_EMITTER', emitterDescription: emitterDescription });
     } else {
       if (isTheServerReady) {
         return socketPostMessage;
@@ -123,7 +126,7 @@ function createMessenger(emitterName) {
         // the very first client receives the pending messages
         // for the rest ... sorry :)
         if (messagesBeforeSetup.length > 0) {
-          socketPostMessage({ type: 'NEW_EMITTER', emitterName: emitterName });
+          socketPostMessage({ type: 'NEW_EMITTER', emitterDescription: emitterDescription });
           messagesBeforeSetup.forEach(function (data) {
             return socketPostMessage(data);
           });
@@ -141,7 +144,7 @@ function createMessenger(emitterName) {
   }
 
   // in the browser
-  browserPostMessage({ type: 'NEW_EMITTER', emitterName: emitterName });
+  browserPostMessage({ type: 'NEW_EMITTER', emitterDescription: emitterDescription });
   return browserPostMessage;
 };
 },{}],3:[function(require,module,exports){

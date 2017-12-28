@@ -4,7 +4,7 @@ import createMessenger from './helpers/createMessenger';
 const NOOP = function () { return function (noop) { return noop; }; };
 
 export default function ReduxEmitter() {
-  const message = createMessenger('ReduxEmitter');
+  const message = createMessenger('ReduxEmitter', 'Redux library');
 
   return function middleware({ getState, dispatch }) {
     return next => action => {
