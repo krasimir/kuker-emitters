@@ -65,28 +65,16 @@ describe('Given the StentEmitter', function () {
             },
             'transitions': {
               'idle': {
-                'save': {
-                  '__func': 'save'
-                }
+                'save': 'function save()'
               },
               'fetching': {
-                'success': {
-                  '__func': 'success'
-                }
+                'success': 'function success()'
               }
             },
-            'isIdle': {
-              '__func': '<anonymous>'
-            },
-            'save': {
-              '__func': '<anonymous>'
-            },
-            'isFetching': {
-              '__func': '<anonymous>'
-            },
-            'success': {
-              '__func': '<anonymous>'
-            }
+            'isIdle': '<anonymous>',
+            'save': '<anonymous>',
+            'isFetching': '<anonymous>',
+            'success': '<anonymous>'
           },
           origin: sinon.match.string,
           kuker: true,
@@ -114,7 +102,7 @@ describe('Given the StentEmitter', function () {
             'answer',
             ['a', 'b'],
             { a: { b: [1, 2] } },
-            { answer: 42, b: ['~4', '~4'] }
+            { answer: 42, b: ['<circular>', '<circular>'] }
           ]
         });
 

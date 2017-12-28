@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Credits: https://github.com/sindresorhus/serialize-error
 
 'use strict';

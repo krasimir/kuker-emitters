@@ -7,13 +7,13 @@ export default function sanitize(something, showErrorInConsole = false) {
   try {
     result = JSON.parse(stringify(something, function (key, value) {
       if (typeof value === 'function') {
-        return { __func: value.name === '' ? '<anonymous>' : value.name };
+        return value.name === '' ? '<anonymous>' : `function ${ value.name }()`;
       }
       if (value instanceof Error) {
         return SerializeError(value);
       }
       return value;
-    }));
+    }, undefined, true));
   } catch (error) {
     if (showErrorInConsole) {
       console.log(error);

@@ -46,7 +46,7 @@ describe('Given the BaseEmitter', function () {
 
       expect(window.top.postMessage).to.be.calledWith({
         kuker: true,
-        state: { a: ['b', 'c'], someFunc: { __func: 'AAA' }, someGene: { __func: 'BBB' } },
+        state: { a: ['b', 'c'], someFunc: 'function AAA()', someGene: 'function BBB()' },
         time: sinon.match.number,
         origin: sinon.match.string,
         title: 'aaaa',

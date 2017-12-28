@@ -341,13 +341,13 @@ function sanitize(something) {
   try {
     result = JSON.parse((0, _CircularJSON.stringify)(something, function (key, value) {
       if (typeof value === 'function') {
-        return { __func: value.name === '' ? '<anonymous>' : value.name };
+        return value.name === '' ? '<anonymous>' : 'function ' + value.name + '()';
       }
       if (value instanceof Error) {
         return (0, _SerializeError2.default)(value);
       }
       return value;
-    }));
+    }, undefined, true));
   } catch (error) {
     if (showErrorInConsole) {
       console.log(error);
@@ -364,6 +364,7 @@ exports.__esModule = true;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+/* eslint-disable */
 /*!
 Copyright (C) 2013-2017 by Andrea Giammarchi - @WebReflection
 
@@ -411,7 +412,7 @@ function generateReplacer(value, replacer, resolve) {
       path = [],
       all = [value],
       seen = [value],
-      mapp = [resolve ? specialChar : '[Circular]'],
+      mapp = [resolve ? specialChar : '<circular>'],
       last = value,
       lvl = 1,
       i,
@@ -535,6 +536,7 @@ exports.default = {
 };
 module.exports = exports['default'];
 },{}],5:[function(require,module,exports){
+/* eslint-disable */
 // Credits: https://github.com/sindresorhus/serialize-error
 
 'use strict';

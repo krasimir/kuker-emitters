@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*!
 Copyright (C) 2013-2017 by Andrea Giammarchi - @WebReflection
 
@@ -50,7 +51,7 @@ var
   path = [],
   all  = [value],
   seen = [value],
-  mapp = [resolve ? specialChar : '[Circular]'],
+  mapp = [resolve ? specialChar : '<circular>'],
   last = value,
   lvl  = 1,
   i, fn
