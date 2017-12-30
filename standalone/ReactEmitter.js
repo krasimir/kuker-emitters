@@ -32,21 +32,27 @@ var Node = function Node() {
   var _ref = data.props || {},
       children = _ref.children,
       otherProps = _objectWithoutProperties(_ref, ['children']);
+  // eslint-disable-next-line
+
+
+  var _ref2 = data.state || {},
+      childrenInState = _ref2.children,
+      otherStateProps = _objectWithoutProperties(_ref2, ['children']);
 
   return {
     name: data.name,
     props: (0, _sanitize2.default)(_extends({}, otherProps)),
-    state: (0, _sanitize2.default)(data.state),
+    state: (0, _sanitize2.default)(_extends({}, otherStateProps)),
     children: []
   };
 };
 
 exports.Node = Node;
-var traverseReactTree = exports.traverseReactTree = function traverseReactTree(root, renderer, _ref2) {
-  var getData = _ref2.getData,
-      getData012 = _ref2.getData012,
-      getDataFiber = _ref2.getDataFiber,
-      getDisplayName = _ref2.getDisplayName;
+var traverseReactTree = exports.traverseReactTree = function traverseReactTree(root, renderer, _ref3) {
+  var getData = _ref3.getData,
+      getData012 = _ref3.getData012,
+      getDataFiber = _ref3.getDataFiber,
+      getDisplayName = _ref3.getDisplayName;
 
   if (!root) return {};
 
@@ -72,8 +78,8 @@ var throttle = exports.throttle = function throttle(func, wait, options) {
   var previous = 0;
   var throttleMeta = { calls: 0, components: [] };
 
-  var processThrottledCall = function processThrottledCall(_ref3) {
-    var data = _ref3.data;
+  var processThrottledCall = function processThrottledCall(_ref4) {
+    var data = _ref4.data;
 
     throttleMeta.calls += 1;
     data && data.name && throttleMeta.components.push(data.name);
@@ -168,9 +174,9 @@ function ReactEmitter() {
         }
       })();
     });
-    hook.on('root', throttle(function (_ref4) {
-      var calls = _ref4.calls,
-          components = _ref4.components;
+    hook.on('root', throttle(function (_ref5) {
+      var calls = _ref5.calls,
+          components = _ref5.components;
 
       postMessage({
         type: '@@react_root',
@@ -179,9 +185,9 @@ function ReactEmitter() {
         components: components
       });
     }), 100);
-    hook.on('mount', throttle(function (_ref5) {
-      var calls = _ref5.calls,
-          components = _ref5.components;
+    hook.on('mount', throttle(function (_ref6) {
+      var calls = _ref6.calls,
+          components = _ref6.components;
 
       postMessage({
         type: '@@react_mount',
@@ -190,9 +196,9 @@ function ReactEmitter() {
         components: components
       });
     }), 100);
-    hook.on('update', throttle(function (_ref6) {
-      var calls = _ref6.calls,
-          components = _ref6.components;
+    hook.on('update', throttle(function (_ref7) {
+      var calls = _ref7.calls,
+          components = _ref7.components;
 
       postMessage({
         type: '@@react_update',
@@ -201,9 +207,9 @@ function ReactEmitter() {
         components: components
       });
     }), 100);
-    hook.on('unmount', throttle(function (_ref7) {
-      var calls = _ref7.calls,
-          components = _ref7.components;
+    hook.on('unmount', throttle(function (_ref8) {
+      var calls = _ref8.calls,
+          components = _ref8.components;
 
       postMessage({
         type: '@@react_unmount',

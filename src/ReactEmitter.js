@@ -9,11 +9,13 @@ var tries = 5;
 export const Node = function (data = {}) {
   // eslint-disable-next-line
   const { children, ...otherProps } = data.props || {};
+  // eslint-disable-next-line
+  const { children: childrenInState, ...otherStateProps } = data.state || {};
 
   return {
     name: data.name,
     props: sanitize({ ...otherProps }),
-    state: sanitize(data.state),
+    state: sanitize({ ...otherStateProps }),
     children: []
   };
 };

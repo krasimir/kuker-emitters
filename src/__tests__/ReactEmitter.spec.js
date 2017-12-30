@@ -33,17 +33,17 @@ describe('Given the ReactEmitter', function () {
       const tree = {
         name: 'Top',
         props: { foo: 'bar' },
-        state: null,
+        state: {},
         children: [
           {
             name: 'section',
             props: {},
-            state: null,
+            state: {},
             children: [
               {
                 name: 'p',
                 props: { className: 'text' },
-                state: null,
+                state: {},
                 children: []
               }
             ]
@@ -51,7 +51,7 @@ describe('Given the ReactEmitter', function () {
           {
             name: 'footer',
             props: { className: 'footer' },
-            state: null,
+            state: {},
             children: []
           }
         ]
