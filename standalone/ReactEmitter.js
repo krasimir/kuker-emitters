@@ -24,6 +24,7 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 // If this breaks make sure that it is in sync with the original
 
 var tries = 5;
+var throttleTime = 200;
 
 var Node = function Node() {
   var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -184,7 +185,7 @@ function ReactEmitter() {
         calls: calls,
         components: components
       });
-    }), 100);
+    }, throttleTime));
     hook.on('mount', throttle(function (_ref6) {
       var calls = _ref6.calls,
           components = _ref6.components;
@@ -195,7 +196,7 @@ function ReactEmitter() {
         calls: calls,
         components: components
       });
-    }), 100);
+    }, throttleTime));
     hook.on('update', throttle(function (_ref7) {
       var calls = _ref7.calls,
           components = _ref7.components;
@@ -206,7 +207,7 @@ function ReactEmitter() {
         calls: calls,
         components: components
       });
-    }), 100);
+    }, throttleTime));
     hook.on('unmount', throttle(function (_ref8) {
       var calls = _ref8.calls,
           components = _ref8.components;
@@ -217,7 +218,7 @@ function ReactEmitter() {
         calls: calls,
         components: components
       });
-    }), 100);
+    }, throttleTime));
   });
 };
 },{"./helpers/createMessenger":2,"./helpers/sanitize":3}],2:[function(require,module,exports){

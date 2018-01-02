@@ -5,6 +5,7 @@ import sanitize from './helpers/sanitize';
 // If this breaks make sure that it is in sync with the original
 
 var tries = 5;
+const throttleTime = 200;
 
 export const Node = function (data = {}) {
   // eslint-disable-next-line
@@ -136,7 +137,7 @@ export default function ReactEmitter() {
         calls,
         components
       });
-    }), 100);
+    }, throttleTime));
     hook.on('mount', throttle(({ calls, components }) => {
       postMessage({
         type: '@@react_mount',
@@ -144,7 +145,7 @@ export default function ReactEmitter() {
         calls,
         components
       });
-    }), 100);
+    }, throttleTime));
     hook.on('update', throttle(({ calls, components }) => {
       postMessage({
         type: '@@react_update',
@@ -152,7 +153,7 @@ export default function ReactEmitter() {
         calls,
         components
       });
-    }), 100);
+    }, throttleTime));
     hook.on('unmount', throttle(({ calls, components }) => {
       postMessage({
         type: '@@react_unmount',
@@ -160,6 +161,6 @@ export default function ReactEmitter() {
         calls,
         components
       });
-    }), 100);
+    }, throttleTime));
   });
 };
