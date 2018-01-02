@@ -24,7 +24,7 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 // If this breaks make sure that it is in sync with the original
 
 var tries = 5;
-var throttleTime = 200;
+var throttleTime = 600;
 
 var Node = function Node() {
   var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
