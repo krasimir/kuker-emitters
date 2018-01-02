@@ -5,7 +5,7 @@ import sanitize from './helpers/sanitize';
 // If this breaks make sure that it is in sync with the original
 
 var tries = 5;
-const throttleTime = 600;
+const throttleTime = 1000;
 
 export const Node = function (data = {}) {
   // eslint-disable-next-line
