@@ -100,8 +100,8 @@ emitter.setStore(store);
 sagaMiddleware.run(rootSaga)
 ```
 
-[Codepen example](https://codepen.io/krasimir/pen/vpYrqw)
-[jsFiddle example](http://jsfiddle.net/726o9zp2/1/)
+* [Codepen example](https://codepen.io/krasimir/pen/vpYrqw)
+* [jsFiddle example](http://jsfiddle.net/726o9zp2/1/)
 
 ![screenshot redux-saga](./img/screenshot_reduxsaga.jpg)
 
@@ -116,6 +116,8 @@ Machine.addMiddleware(StentEmitter());
 
 [Codepen example](https://codepen.io/krasimir/pen/YEjYvR)
 
+![screenshot stent](./img/screenshot_stent.jpg)
+
 ## Integration with [Machina.js](http://machina-js.org/)
 
 ```js
@@ -128,6 +130,8 @@ MachinaEmitter(machine);
 ```
 
 [Codepen example](https://codepen.io/krasimir/pen/aEOpvE)
+
+![screenshot machina](./img/screenshot_machina.jpg)
 
 ## Integration with [MobX](https://mobx.js.org/)
 
@@ -148,3 +152,5 @@ MobXEmitter(spy, [ person ]);
 ```
 
 [Codepen example](https://codepen.io/krasimir/pen/LeRqRg)
+
+![screenshot mobx](./img/screenshot_mobx.jpg)
