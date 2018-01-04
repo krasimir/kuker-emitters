@@ -63,6 +63,8 @@ ReactEmitter();
 
 [TodoMVC example](http://work.krasimirtsonev.com/git/redux-react-todomvc/)
 
+![screenshot react emitter](./img/screenshot_reactemitter.jpg)
+
 ## Integration with [Redux](https://redux.js.org/)
 
 ```js
