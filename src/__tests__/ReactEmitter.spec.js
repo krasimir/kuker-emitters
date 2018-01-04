@@ -1,4 +1,6 @@
-import { Node, traverseReactTree, throttle } from '../ReactEmitter';
+import ReactEmitter from '../ReactEmitter';
+
+const { Node, traverseReactTree, throttle } = ReactEmitter;
 
 describe('Given the ReactEmitter', function () {
   describe('when we create a new Node', function () {

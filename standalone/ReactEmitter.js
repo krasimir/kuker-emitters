@@ -2,7 +2,6 @@
 'use strict';
 
 exports.__esModule = true;
-exports.throttle = exports.traverseReactTree = exports.Node = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -48,8 +47,7 @@ var Node = function Node() {
   };
 };
 
-exports.Node = Node;
-var traverseReactTree = exports.traverseReactTree = function traverseReactTree(root, renderer, _ref3) {
+var traverseReactTree = function traverseReactTree(root, renderer, _ref3) {
   var getData = _ref3.getData,
       getData012 = _ref3.getData012,
       getDataFiber = _ref3.getDataFiber,
@@ -73,7 +71,7 @@ var traverseReactTree = exports.traverseReactTree = function traverseReactTree(r
   return walkNode(root);
 };
 
-var throttle = exports.throttle = function throttle(func, wait, options) {
+var throttle = function throttle(func, wait, options) {
   var context, args, result;
   var timeout = null;
   var previous = 0;
@@ -221,6 +219,11 @@ function ReactEmitter() {
     }, throttleTime));
   });
 };
+
+ReactEmitter.Node = Node;
+ReactEmitter.traverseReactTree = traverseReactTree;
+ReactEmitter.throttle = throttle;
+module.exports = exports['default'];
 },{"./helpers/createMessenger":2,"./helpers/sanitize":3}],2:[function(require,module,exports){
 'use strict';
 

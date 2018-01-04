@@ -7,7 +7,7 @@ import sanitize from './helpers/sanitize';
 var tries = 5;
 const throttleTime = 1000;
 
-export const Node = function (data = {}) {
+const Node = function (data = {}) {
   // eslint-disable-next-line
   const { children, ...otherProps } = data.props || {};
   // eslint-disable-next-line
@@ -21,7 +21,7 @@ export const Node = function (data = {}) {
   };
 };
 
-export const traverseReactTree = function (root, renderer, { getData, getData012, getDataFiber, getDisplayName }) {
+const traverseReactTree = function (root, renderer, { getData, getData012, getDataFiber, getDisplayName }) {
   if (!root) return {};
 
   const isPre013 = !renderer.Reconciler;
@@ -38,7 +38,7 @@ export const traverseReactTree = function (root, renderer, { getData, getData012
   return walkNode(root);
 };
 
-export const throttle = function (func, wait, options) {
+const throttle = function (func, wait, options) {
   var context, args, result;
   var timeout = null;
   var previous = 0;
@@ -164,3 +164,7 @@ export default function ReactEmitter() {
     }, throttleTime));
   });
 };
+
+ReactEmitter.Node = Node;
+ReactEmitter.traverseReactTree = traverseReactTree;
+ReactEmitter.throttle = throttle;
