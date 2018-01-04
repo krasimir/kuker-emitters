@@ -79,6 +79,8 @@ const store = createStore(<reducer>, applyMiddleware(middleware));
 [Codepen example](https://codepen.io/krasimir/pen/vpYrqw)
 [TodoMVC example](http://work.krasimirtsonev.com/git/redux-react-todomvc/)
 
+![screenshot redux emitter](./img/screenshot_redux.jpg)
+
 ## Integration with [redux-saga](https://redux-saga.js.org/)
 
 ```js
@@ -99,6 +101,9 @@ sagaMiddleware.run(rootSaga)
 ```
 
 [Codepen example](https://codepen.io/krasimir/pen/vpYrqw)
+[jsFiddle example](http://jsfiddle.net/726o9zp2/1/)
+
+![screenshot redux-saga](./img/screenshot_reduxsaga.jpg)
 
 ## Integration with [Stent](https://github.com/krasimir/stent)
 
