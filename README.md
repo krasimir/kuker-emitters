@@ -1,14 +1,14 @@
-# Emitters for Kuker
+# Emitters for [Kuker](https://github.com/krasimir/kuker)
 
-Integrate [Kuker](https://github.com/krasimir/kuker) with:
+![kuker](./img/kuker_banner.jpg)
 
+* [Base emitter](#baseemitter)
+* [React](#integration-with-react)
 * [Redux](#integration-with-redux)
 * [redux-saga](#integration-with-redux-saga)
 * [Stent](#integration-with-stent)
 * [Machina.js](#integration-with-machinajs)
 * [MobX](#integration-with-mobx)
-
-![kuker](./img/kuker_banner.jpg) 
 
 Pluggable modules that send events to [Kuker](https://github.com/krasimir/kuker). These emitters are framework specific and provide nicely formatted output. If you want to send a message manually you are free do it by calling:
 
@@ -29,7 +29,7 @@ window.postMessage({
 
 ## Installation
 
-`yarn add kuker-emitters -D` or `npm install kuker-emitters -D`. There're also standalone versions in [here](./standalone). You may grab the files, include them in your page and you'll have globals like `ReduxEmitter`, `ReduxSagaEmitter` or `StentEmitter`.
+`yarn add kuker-emitters -D` or `npm install kuker-emitters -D`. There're also standalone versions in [here](./standalone). You may grab the file, include it in your page and you'll a global like `ReduxEmitter`, `ReduxSagaEmitter` or `StentEmitter`.
 
 *These standalone files work via [rawgit](https://rawgit.com/krasimir/kuker-emitters/master/standalone/ReduxEmitter.js) too.*
 
@@ -50,6 +50,14 @@ emit({
 ```
 
 [Codepen example](https://codepen.io/krasimir/pen/ypNVVm)
+
+## Integration with [React](https://reactjs.org/)
+
+```js
+import { ReactEmitter } from 'kuker-emitters';
+
+ReactEmitter();
+```
 
 ## Integration with [Redux](https://redux.js.org/)
 
