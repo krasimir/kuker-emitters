@@ -59,6 +59,8 @@ import { ReactEmitter } from 'kuker-emitters';
 ReactEmitter();
 ```
 
+[TodoMVC example](http://work.krasimirtsonev.com/git/redux-react-todomvc/)
+
 ## Integration with [Redux](https://redux.js.org/)
 
 ```js
@@ -71,6 +73,7 @@ const store = createStore(<reducer>, applyMiddleware(middleware));
 ```
 
 [Codepen example](https://codepen.io/krasimir/pen/vpYrqw)
+[TodoMVC example](http://work.krasimirtsonev.com/git/redux-react-todomvc/)
 
 ## Integration with [redux-saga](https://redux-saga.js.org/)
 
