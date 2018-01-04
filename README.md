@@ -76,8 +76,8 @@ const middleware = ReduxEmitter();
 const store = createStore(<reducer>, applyMiddleware(middleware));
 ```
 
-[Codepen example](https://codepen.io/krasimir/pen/vpYrqw)
-[TodoMVC example](http://work.krasimirtsonev.com/git/redux-react-todomvc/)
+* [Codepen example](https://codepen.io/krasimir/pen/vpYrqw)
+* [TodoMVC example](http://work.krasimirtsonev.com/git/redux-react-todomvc/)
 
 ![screenshot redux emitter](./img/screenshot_redux.jpg)
 
