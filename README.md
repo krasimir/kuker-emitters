@@ -51,6 +51,8 @@ emit({
 
 [Codepen example](https://codepen.io/krasimir/pen/ypNVVm)
 
+![screenshot base emitter](./img/screenshot_baseemitter.jpg)
+
 ## Integration with [React](https://reactjs.org/)
 
 ```js
