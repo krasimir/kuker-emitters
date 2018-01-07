@@ -7,6 +7,13 @@ const NOT_IN_DEVELOPMENT_MODE = 'AngularEmitter: Please run Angular in developme
 const INVALID_ROOT_INSTANCE = 'AngularEmitter: Invalid root instance';
 const MISSING_NGZONE = 'AngularEmitter: Missing NgZone in ng.coreTokens';
 
+const AUGURY_TOKEN_ID_METADATA_KEY = '__augury_token_id';
+
+/* ***************************************** HELPERS ***************************************** */
+/* ******************************************************************************************* */
+/* ******************************************************************************************* */
+/* ******************************************************************************************* */
+
 const throttle = function (func, wait, options) {
   var context, args, result;
   var timeout = null;
@@ -45,18 +52,6 @@ const throttle = function (func, wait, options) {
     return result;
   };
 };
-const validateAPI = function () {
-  if (typeof window['ng'] === 'undefined' || typeof window['ng'].probe === 'undefined') {
-    return false;
-  }
-  return true;
-};
-const getClassName = function (c) {
-  if (c && c.constructor && c.constructor.name) {
-    return c.constructor.name;
-  }
-  return 'unknown';
-};
 const functionName = (fn) => {
   const extract = (value) => value.match(/^function ([^\(]*)\(/);
 
@@ -72,8 +67,7 @@ const functionName = (fn) => {
   }
   return name;
 };
-
-export const tokenName = token => functionName(token) || token.toString();
+const tokenName = token => functionName(token) || token.toString();
 const componentInstanceExistsInParentChain = (debugElement) => {
   const componentInstanceRef = debugElement.componentInstance;
 
@@ -85,42 +79,75 @@ const componentInstanceExistsInParentChain = (debugElement) => {
   }
   return false;
 };
+const isDebugElementComponent = (element) => !!element.componentInstance && !componentInstanceExistsInParentChain(element);
+const getComponentName = element => {
+  if (element.componentInstance &&
+    element.componentInstance.constructor &&
+    !componentInstanceExistsInParentChain(element)) {
+    return functionName(element.componentInstance.constructor);
+  } else if (element.name) {
+    return element.name;
+  }
 
-export const isDebugElementComponent = (element) => !!element.componentInstance &&
-  !componentInstanceExistsInParentChain(element);
+  return element.nativeElement.tagName.toLowerCase();
+};
+const getComponentProviders = (element, name) => {
+  let providers = [];
+
+  if (element.providerTokens && element.providerTokens.length > 0) {
+    providers = element.providerTokens
+      .map(t => [tokenName(t), element.injector.get(t)])
+      .filter(provider => provider[1] !== element.componentInstance)
+      .map(provider => provider[0]);
+  }
+  return providers;
+};
+const injectedParameterDecorators = (instance) =>
+  Reflect.getOwnMetadata('parameters', instance.constructor) || [];
+const parameterTypes = (instance) =>
+  Reflect.getOwnMetadata('design:paramtypes', instance.constructor) || [];
+const getDependencies = (instance) => {
+  const parameterDecorators = injectedParameterDecorators(instance);
+  const normalizedParamTypes = parameterTypes(instance).map((type, i) =>
+    type ? type : parameterDecorators[i].filter(decorator => decorator.toString() === '@Inject')[0].token);
+
+  return normalizedParamTypes.map((paramType, i) => ({
+    id: Reflect.getMetadata(AUGURY_TOKEN_ID_METADATA_KEY, paramType),
+    name: functionName(paramType) || paramType.toString(),
+    decorators: parameterDecorators[i] ? parameterDecorators[i].map(d => d.toString()) : []
+  }));
+};
+
+/* ***************************************** Kuker specific ********************************** */
+/* ******************************************************************************************* */
+/* ******************************************************************************************* */
+/* ******************************************************************************************* */
+
 const getTree = function (rootInstance) {
 
-  const traverse = function (node, parentContext = null) {
-    // console.log(node);
-    const isComponent = isDebugElementComponent(node);
-    const providers =
-      node.providerTokens
-        .map(t => [tokenName(t), node.injector.get(t)])
-        .filter(provider => provider[1] !== node.componentInstance)
-        .map(provider => provider[0]);
+  const traverse = function (element, parentContext = null) {
+    const name = getComponentName(element);
+    const isComponent = isDebugElementComponent(element);
+    const providers = getComponentProviders(element);
     const item = {
-      name: 'unknown',
+      name,
+      providers,
       props: {},
       state: {},
-      children: []
+      children: [],
+      dependencies: isDebugElementComponent(element) ? getDependencies(element.componentInstance) : []
     };
 
-    // name
-    if (node.name && !isComponent) {
-      item.name = node.name;
-    } else if (node.componentInstance) {
-      item.name = getClassName(node.componentInstance);
-    }
     // props
-    if (node.attributes && typeof node.attributes === 'object') {
-      for (let prop in node.attributes) {
-        item.props[prop] = node.attributes[prop];
+    if (element.attributes && typeof element.attributes === 'object') {
+      for (let prop in element.attributes) {
+        item.props[prop] = element.attributes[prop];
       }
     }
     // children
-    if (node.children && node.children.length > 0) {
-      item.children = node.children
-        .map(child => traverse(child, node.context))
+    if (element.children && element.children.length > 0) {
+      item.children = element.children
+        .map(child => traverse(child, element.context))
         .filter(child => !!child);
     }
 
@@ -129,20 +156,17 @@ const getTree = function (rootInstance) {
     }
 
     // state
-    if (node.context && node.context !== parentContext && isComponent) {
-      for (let prop in node.context) {
-        item.state[prop] = node.context[prop];
+    if (element.context && element.context !== parentContext && isComponent) {
+      for (let prop in element.context) {
+        item.state[prop] = element.context[prop];
       }
     }
 
     return item;
   };
 
-  const tree = traverse(rootInstance);
-  // console.log(tree);
-  // console.log(rootInstance);
-
-  return tree;
+  console.log(traverse(rootInstance));
+  return traverse(rootInstance);
 };
 const subscribe = function (rootInstance, sendMessage) {
   if (!rootInstance) {
