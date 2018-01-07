@@ -7,8 +7,6 @@ const NOT_IN_DEVELOPMENT_MODE = 'AngularEmitter: Please run Angular in developme
 const INVALID_ROOT_INSTANCE = 'AngularEmitter: Invalid root instance';
 const MISSING_NGZONE = 'AngularEmitter: Missing NgZone in ng.coreTokens';
 
-const AUGURY_TOKEN_ID_METADATA_KEY = '__augury_token_id';
-
 /* ***************************************** HELPERS ***************************************** */
 /* ******************************************************************************************* */
 /* ******************************************************************************************* */
@@ -102,21 +100,6 @@ const getComponentProviders = (element, name) => {
   }
   return providers;
 };
-const injectedParameterDecorators = (instance) =>
-  Reflect.getOwnMetadata('parameters', instance.constructor) || [];
-const parameterTypes = (instance) =>
-  Reflect.getOwnMetadata('design:paramtypes', instance.constructor) || [];
-const getDependencies = (instance) => {
-  const parameterDecorators = injectedParameterDecorators(instance);
-  const normalizedParamTypes = parameterTypes(instance).map((type, i) =>
-    type ? type : parameterDecorators[i].filter(decorator => decorator.toString() === '@Inject')[0].token);
-
-  return normalizedParamTypes.map((paramType, i) => ({
-    id: Reflect.getMetadata(AUGURY_TOKEN_ID_METADATA_KEY, paramType),
-    name: functionName(paramType) || paramType.toString(),
-    decorators: parameterDecorators[i] ? parameterDecorators[i].map(d => d.toString()) : []
-  }));
-};
 
 /* ***************************************** Kuker specific ********************************** */
 /* ******************************************************************************************* */
@@ -134,8 +117,7 @@ const getTree = function (rootInstance) {
       providers,
       props: {},
       state: {},
-      children: [],
-      dependencies: isDebugElementComponent(element) ? getDependencies(element.componentInstance) : []
+      children: []
     };
 
     // props
@@ -165,7 +147,6 @@ const getTree = function (rootInstance) {
     return item;
   };
 
-  console.log(traverse(rootInstance));
   return traverse(rootInstance);
 };
 const subscribe = function (rootInstance, sendMessage) {
