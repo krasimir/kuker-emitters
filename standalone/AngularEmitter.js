@@ -254,10 +254,11 @@ var AngularEmitter = function AngularEmitter() {
       var rootInstance = api(rootElement);
       var Router = rootInstance.injector.get(window['ng'].coreTokens.Router);
 
-      if (Router && Router.config) {
-        rootInstance.Router = { config: Router.config };
-      }
-      sendMessage({ type: '@@angular_rootDetected', state: getTree(rootInstance) });
+      sendMessage({
+        type: '@@angular_rootDetected',
+        state: getTree(rootInstance),
+        Router: Router && Router.config ? { config: Router.config } : null
+      });
       subscribe(rootInstance, function (type) {
         return sendMessage({ type: type, state: getTree(rootInstance) });
       });
