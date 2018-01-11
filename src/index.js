@@ -6,6 +6,7 @@ import StentEmitter from './StentEmitter';
 import MobXEmitter from './MobXEmitter';
 import ReactEmitter from './ReactEmitter';
 import AngularEmitter from './AngularEmitter';
+import VueEmitter from './VueEmitter';
 
 import createMessenger from './helpers/createMessenger';
 import sanitize from './helpers/sanitize';
@@ -19,6 +20,7 @@ export default {
   MobXEmitter,
   ReactEmitter,
   AngularEmitter,
+  VueEmitter,
 
   createMessenger,
   sanitize
