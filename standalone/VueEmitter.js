@@ -28,7 +28,7 @@ var detect = function detect(callback) {
     }
     setTimeout(function () {
       return detect(callback);
-    }, 10);
+    }, 100);
   }
 };
 
