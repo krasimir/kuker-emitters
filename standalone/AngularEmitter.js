@@ -223,8 +223,9 @@ var AngularEmitter = function AngularEmitter() {
     if (rootElement) {
       callback();
     } else {
-      if (findingRootAttempts === 0) {
+      if (findingRootAttempts <= 0) {
         callback(CAN_NOT_FIND_ROOT(options.rootSelector));
+        return;
       }
       setTimeout(function () {
         return findRoot(callback);
@@ -237,13 +238,13 @@ var AngularEmitter = function AngularEmitter() {
     if (api) {
       callback();
     } else {
-      if (findingNGAPIAttempts === 0) {
+      if (findingNGAPIAttempts <= 0) {
         callback(NOT_IN_DEVELOPMENT_MODE);
-      } else {
-        setTimeout(function () {
-          return findNGAPI(callback);
-        }, 1000);
+        return;
       }
+      setTimeout(function () {
+        return findNGAPI(callback);
+      }, 1000);
     }
   };
 

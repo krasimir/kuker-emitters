@@ -10,8 +10,9 @@ const detect = function (callback) {
   if (window[HOOK_KEY] && window[HOOK_KEY].listen) {
     callback(null, window[HOOK_KEY]);
   } else {
-    if (detectAttempts === 0) {
+    if (detectAttempts <= 0) {
       callback('VueEmitter: Kuker extension not installed or it is disabled.');
+      return;
     }
     setTimeout(() => detect(callback), 100);
   }
