@@ -60,7 +60,7 @@ function toJSON(node) {
   return obj;
 }
 
-export default function HTMLEmitter() {
+export default function HTMLEmitter(options = { throttleTime: 1200 }) {
   if (typeof window === 'undefined' || typeof MutationObserver === 'undefined') return;
 
   detect((error, root) => {
@@ -72,7 +72,7 @@ export default function HTMLEmitter() {
 
     const observer = new MutationObserver(throttle(mutations => {
       send({ type: '@@HTML_mutation', state: toJSON(root) });
-    }, 800, {}));
+    }, options.throttleTime, {}));
 
     observer.observe(root, { attributes: true, childList: true, subtree: true });
   });

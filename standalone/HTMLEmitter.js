@@ -79,6 +79,8 @@ function toJSON(node) {
 }
 
 function HTMLEmitter() {
+  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { throttleTime: 1200 };
+
   if (typeof window === 'undefined' || typeof MutationObserver === 'undefined') return;
 
   detect(function (error, root) {
@@ -92,7 +94,7 @@ function HTMLEmitter() {
 
     var observer = new MutationObserver((0, _throttle2.default)(function (mutations) {
       send({ type: '@@HTML_mutation', state: toJSON(root) });
-    }, 800, {}));
+    }, options.throttleTime, {}));
 
     observer.observe(root, { attributes: true, childList: true, subtree: true });
   });
