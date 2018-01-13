@@ -13,6 +13,10 @@ var _createMessenger = require('./helpers/createMessenger');
 
 var _createMessenger2 = _interopRequireDefault(_createMessenger);
 
+var _throttle = require('./helpers/throttle');
+
+var _throttle2 = _interopRequireDefault(_throttle);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable max-len */
@@ -28,44 +32,6 @@ var MISSING_NGZONE = 'AngularEmitter: Missing NgZone in ng.coreTokens';
 /* ******************************************************************************************* */
 /* ******************************************************************************************* */
 
-var throttle = function throttle(func, wait, options) {
-  var context, args, result;
-  var timeout = null;
-  var previous = 0;
-
-  var later = function later() {
-    previous = options.leading === false ? 0 : Date.now();
-    timeout = null;
-    result = func.apply(context, args);
-    if (!timeout) context = args = null;
-  };
-
-  if (!options) options = {};
-
-  return function () {
-    var now = Date.now();
-
-    if (!previous && options.leading === false) previous = now;
-
-    // eslint-disable-next-line
-    var remaining = wait - (now - previous);
-
-    context = this;
-    args = arguments;
-    if (remaining <= 0 || remaining > wait) {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      previous = now;
-      result = func.apply(context, args);
-      if (!timeout) context = args = null;
-    } else if (!timeout && options.trailing !== false) {
-      timeout = setTimeout(later, remaining);
-    }
-    return result;
-  };
-};
 var functionName = function functionName(fn) {
   var extract = function extract(value) {
     return value.match(/^function ([^\(]*)\(/);
@@ -186,7 +152,7 @@ var subscribe = function subscribe(rootInstance, sendMessage) {
   var ngZone = rootInstance.injector.get(window['ng'].coreTokens.NgZone);
 
   if (ngZone) {
-    ngZone.onStable.subscribe(throttle(function () {
+    ngZone.onStable.subscribe((0, _throttle2.default)(function () {
       return sendMessage('@@angular_onStable');
     }, 800, {}));
     ngZone.onError.subscribe(function () {
@@ -273,7 +239,7 @@ var AngularEmitter = function AngularEmitter() {
 
 exports.default = AngularEmitter;
 module.exports = exports['default'];
-},{"./helpers/createMessenger":2,"./helpers/sanitize":3}],2:[function(require,module,exports){
+},{"./helpers/createMessenger":2,"./helpers/sanitize":3,"./helpers/throttle":4}],2:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -416,7 +382,51 @@ function sanitize(something) {
   return result;
 }
 module.exports = exports['default'];
-},{"./vendors/CircularJSON":4,"./vendors/SerializeError":5}],4:[function(require,module,exports){
+},{"./vendors/CircularJSON":5,"./vendors/SerializeError":6}],4:[function(require,module,exports){
+"use strict";
+
+exports.__esModule = true;
+exports.default = throttle;
+function throttle(func, wait, options) {
+  var context, args, result;
+  var timeout = null;
+  var previous = 0;
+
+  var later = function later() {
+    previous = options.leading === false ? 0 : Date.now();
+    timeout = null;
+    result = func.apply(context, args);
+    if (!timeout) context = args = null;
+  };
+
+  if (!options) options = {};
+
+  return function () {
+    var now = Date.now();
+
+    if (!previous && options.leading === false) previous = now;
+
+    // eslint-disable-next-line
+    var remaining = wait - (now - previous);
+
+    context = this;
+    args = arguments;
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = now;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result;
+  };
+}
+module.exports = exports['default'];
+},{}],5:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -594,7 +604,7 @@ exports.default = {
   parse: parseRecursion
 };
 module.exports = exports['default'];
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /* eslint-disable */
 // Credits: https://github.com/sindresorhus/serialize-error
 

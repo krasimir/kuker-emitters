@@ -10,6 +10,7 @@ import VueEmitter from './VueEmitter';
 
 import createMessenger from './helpers/createMessenger';
 import sanitize from './helpers/sanitize';
+import throttle from './helpers/throttle';
 
 export default {
   BaseEmitter,
@@ -23,5 +24,6 @@ export default {
   VueEmitter,
 
   createMessenger,
-  sanitize
+  sanitize,
+  throttle
 };

@@ -1,5 +1,6 @@
 import sanitize from './helpers/sanitize';
 import createMessenger from './helpers/createMessenger';
+import throttle from './helpers/throttle';
 
 /* eslint-disable max-len */
 const CAN_NOT_FIND_ROOT = selector => `AngularEmitter: I can not find the Angular root element using the "${ selector }" selector.`;
@@ -12,44 +13,6 @@ const MISSING_NGZONE = 'AngularEmitter: Missing NgZone in ng.coreTokens';
 /* ******************************************************************************************* */
 /* ******************************************************************************************* */
 
-const throttle = function (func, wait, options) {
-  var context, args, result;
-  var timeout = null;
-  var previous = 0;
-
-  var later = function () {
-    previous = options.leading === false ? 0 : Date.now();
-    timeout = null;
-    result = func.apply(context, args);
-    if (!timeout) context = args = null;
-  };
-
-  if (!options) options = {};
-
-  return function () {
-    var now = Date.now();
-
-    if (!previous && options.leading === false) previous = now;
-
-    // eslint-disable-next-line
-    var remaining = wait - (now - previous);
-
-    context = this;
-    args = arguments;
-    if (remaining <= 0 || remaining > wait) {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      previous = now;
-      result = func.apply(context, args);
-      if (!timeout) context = args = null;
-    } else if (!timeout && options.trailing !== false) {
-      timeout = setTimeout(later, remaining);
-    }
-    return result;
-  };
-};
 const functionName = (fn) => {
   const extract = (value) => value.match(/^function ([^\(]*)\(/);
 
