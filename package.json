@@ -1,6 +1,6 @@
 {
   "name": "kuker-emitters",
-  "version": "6.6.4",
+  "version": "6.7.0",
   "description": "Emitters for Kuker Chrome extension",
   "main": "lib",
   "scripts": {
@@ -13,8 +13,9 @@
     "build-react": "browserify ./lib/ReactEmitter.js -o ./standalone/ReactEmitter.js -s ReactEmitter -u socket.io -u http && uglifyjs ./standalone/ReactEmitter.js -o ./standalone/ReactEmitter.min.js",
     "build-angular": "browserify ./lib/AngularEmitter.js -o ./standalone/AngularEmitter.js -s AngularEmitter -u socket.io -u http && uglifyjs ./standalone/AngularEmitter.js -o ./standalone/AngularEmitter.min.js",
     "build-vue": "browserify ./lib/VueEmitter.js -o ./standalone/VueEmitter.js -s VueEmitter -u socket.io -u http && uglifyjs ./standalone/VueEmitter.js -o ./standalone/VueEmitter.min.js",
+    "build-html": "browserify ./lib/HTMLEmitter.js -o ./standalone/HTMLEmitter.js -s HTMLEmitter -u socket.io -u http && uglifyjs ./standalone/HTMLEmitter.js -o ./standalone/HTMLEmitter.min.js",
     "build-to-lib": "babel src --out-dir lib",
-    "build": "npm run test && npm run build-to-lib && npm run build-stent && npm run build-redux && npm run build-redux-saga && npm run build-base && npm run build-machina && npm run build-mobx && npm run build-react && npm run build-angular && npm run build-vue",
+    "build": "npm run test && npm run build-to-lib && npm run build-stent && npm run build-redux && npm run build-redux-saga && npm run build-base && npm run build-machina && npm run build-mobx && npm run build-react && npm run build-angular && npm run build-vue && npm run build-html",
     "test": "env BABEL_ENV=node ./node_modules/.bin/jest \"(.*)\\.spec\\.js\"",
     "test:watch": "env BABEL_ENV=node ./node_modules/.bin/jest \"(.*)\\.spec\\.js\" --watch",
     "watch": "babel src --out-dir lib -w",

@@ -7,6 +7,7 @@ import MobXEmitter from './MobXEmitter';
 import ReactEmitter from './ReactEmitter';
 import AngularEmitter from './AngularEmitter';
 import VueEmitter from './VueEmitter';
+import HTMLEmitter from './HTMLEmitter';
 
 import createMessenger from './helpers/createMessenger';
 import sanitize from './helpers/sanitize';
@@ -22,6 +23,7 @@ export default {
   ReactEmitter,
   AngularEmitter,
   VueEmitter,
+  HTMLEmitter,
 
   createMessenger,
   sanitize,
