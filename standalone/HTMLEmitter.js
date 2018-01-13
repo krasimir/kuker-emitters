@@ -92,7 +92,7 @@ function HTMLEmitter() {
 
     var observer = new MutationObserver((0, _throttle2.default)(function (mutations) {
       send({ type: '@@HTML_mutation', state: toJSON(root) });
-    }, 100, {}));
+    }, 800, {}));
 
     observer.observe(root, { attributes: true, childList: true, subtree: true });
   });

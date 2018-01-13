@@ -72,7 +72,7 @@ export default function HTMLEmitter() {
 
     const observer = new MutationObserver(throttle(mutations => {
       send({ type: '@@HTML_mutation', state: toJSON(root) });
-    }, 100, {}));
+    }, 800, {}));
 
     observer.observe(root, { attributes: true, childList: true, subtree: true });
   });
