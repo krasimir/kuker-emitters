@@ -1,6 +1,6 @@
 {
   "name": "kuker-emitters",
-  "version": "6.7.2",
+  "version": "6.7.3",
   "description": "Emitters for Kuker Chrome extension",
   "main": "lib",
   "scripts": {
@@ -72,7 +72,8 @@
     "sinon": "2.0.0",
     "sinon-chai": "2.9.0",
     "stent": "^3.6.6",
-    "uglify-js": "^3.0.28"
+    "uglify-js": "^3.0.28",
+    "moment": "^2.20.1"
   },
   "dependencies": {
     "socket.io": "^2.0.4"

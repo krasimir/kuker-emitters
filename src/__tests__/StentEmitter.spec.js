@@ -5,6 +5,8 @@ import { call, connect } from 'stent/lib/helpers';
 import { connect as connectReactComponent } from 'stent/lib/react';
 import { mount } from 'enzyme';
 import React from 'react';
+import CircularJSON from '../helpers/vendors/CircularJSON';
+import moment from 'moment';
 
 const defaults = {
   name: 'Foo',
@@ -155,7 +157,7 @@ describe('Given the StentEmitter', function () {
         const machine = Machine.create({ name: 'idle' }, {
           idle: {
             run: function * () {
-              yield { name: 'running' }; // 1
+              yield { name: 'running', noway: moment() }; // 1
               const fooAnswer = yield call(foo, 'arg1', 'arg2'); // 2
               const barAnswer = yield call(bar, fooAnswer); // 3
 

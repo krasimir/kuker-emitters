@@ -16,6 +16,8 @@ const formatYielded = yielded => {
       y = { __type: 'call' };
     }
     y.func = funcName;
+  } else {
+    y = sanitize(y);
   }
 
   return y;
