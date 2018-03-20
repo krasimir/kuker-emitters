@@ -223,7 +223,7 @@ var AngularEmitter = function AngularEmitter() {
         console.error(error);return;
       }
       var rootInstance = api(rootElement);
-      var Router = rootInstance.injector.get(window['ng'].coreTokens.Router);
+      var Router = window['ng'].coreTokens.Router && rootInstance.injector.get(window['ng'].coreTokens.Router);
 
       sendMessage({
         type: '@@angular_rootDetected',
