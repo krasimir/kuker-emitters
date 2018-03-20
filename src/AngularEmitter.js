@@ -177,7 +177,7 @@ const AngularEmitter = function (options = { rootSelector: 'app-root' }) {
         console.error(error); return;
       }
       const rootInstance = api(rootElement);
-      const Router = rootInstance.injector.get(window['ng'].coreTokens.Router);
+      const Router = window['ng'].coreTokens.Router && rootInstance.injector.get(window['ng'].coreTokens.Router);
 
       sendMessage({
         type: '@@angular_rootDetected',
